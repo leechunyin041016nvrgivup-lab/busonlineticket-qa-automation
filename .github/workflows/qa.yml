@@ -23,9 +23,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      # ── 3. Chrome (for UI tests) ───────────────────────────────────────────
+      # ── 3. Chrome + ChromeDriver (matched versions, no webdriver-manager) ──
       - name: Set up Chrome
         uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
 
       # ── 4. Dependencies ────────────────────────────────────────────────────
       - name: Install dependencies
@@ -33,55 +34,35 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # ── 5. Project folder structure ────────────────────────────────────────
-      #  pytest.ini points testpaths = tests, so the layout must match:
-      #
-      #   bot_qa/
-      #   ├── config/
-      #   │   ├── __init__.py
-      #   │   └── settings.py
-      #   ├── data/
-      #   │   └── test_data.json
-      #   ├── tests/
-      #   │   ├── ui/
-      #   │   │   ├── __init__.py
-      #   │   │   ├── test_ui_login.py
-      #   │   │   └── test_ui_signup.py
-      #   │   └── api/
-      #   │       ├── __init__.py
-      #   │       ├── test_api_login.py
-      #   │       └── test_api_signup.py
-      #   ├── utils/
-      #   │   ├── __init__.py
-      #   │   ├── data_loader.py
-      #   │   ├── driver_factory.py
-      #   │   ├── logger.py
-      #   │   └── report_writer.py
-      #   ├── conftest.py
-      #   ├── pytest.ini
-      #   └── requirements.txt
+      # ── 5. Confirm Chrome + ChromeDriver versions ──────────────────────────
+      - name: Verify Chrome and ChromeDriver
+        run: |
+          google-chrome --version
+          chromedriver --version
 
       # ── 6. API tests (no browser needed) ──────────────────────────────────
       - name: Run API tests
         env:
-          # No browser required for API tests
           PYTHONPATH: ${{ github.workspace }}
         run: |
           pytest -m api -v
 
-      # ── 7. UI tests (headless Chrome) ─────────────────────────────────────
+      # ── 7. UI tests (headless Chrome, system chromedriver) ─────────────────
       - name: Run UI tests
         env:
-          UI_MODE: headless          # triggers --headless=new in driver_factory.py
+          UI_MODE: headless
           BROWSER: chrome
           PYTHONPATH: ${{ github.workspace }}
-          DISPLAY: ":99"             # virtual display (fallback, not needed for headless)
+          # Tell driver_factory.py exactly where the chromedriver binary is.
+          # setup-chrome installs both chrome + chromedriver and puts chromedriver on PATH.
+          CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
         run: |
-          pytest -m ui -v
+          pytest -m "ui and not signup" -v
+        # signup excluded — uses input() to wait for OTP, would hang forever in CI
 
-      # ── 8. Upload HTML reports as artifacts ────────────────────────────────
+      # ── 8. Upload HTML reports ─────────────────────────────────────────────
       - name: Upload test reports
-        if: always()                 # upload even when tests fail
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
