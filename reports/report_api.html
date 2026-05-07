@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Test Report</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    padding: 32px 24px;
+    min-height: 100vh;
+}
+h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
+.subtitle { font-size: 0.85rem; color: #64748b; margin-bottom: 28px; }
+.summary-bar {
+    display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap;
+}
+.badge {
+    padding: 8px 18px; border-radius: 8px; font-size: 0.82rem;
+    font-weight: 600; letter-spacing: .4px;
+}
+.badge.pass { background: #14532d; color: #86efac; }
+.badge.fail { background: #450a0a; color: #fca5a5; }
+.badge.total { background: #1e293b; color: #94a3b8; }
+
+.card {
+    background: #1e293b;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    border: 1px solid #334155;
+    transition: border-color .2s;
+}
+.card:hover { border-color: #475569; }
+.card-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 20px; cursor: pointer;
+    user-select: none;
+}
+.card-header:hover { background: #263347; }
+.status-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.status-dot.pass { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
+.status-dot.fail { background: #ef4444; box-shadow: 0 0 6px #ef444488; }
+.tc-id   { font-size: 0.72rem; color: #64748b; font-weight: 600; letter-spacing: .5px; }
+.tc-name { font-size: 0.95rem; font-weight: 600; color: #e2e8f0; }
+.tc-dur  { margin-left: auto; font-size: 0.75rem; color: #475569; }
+.chevron { font-size: 0.7rem; color: #475569; margin-left: 8px; transition: transform .2s; }
+.card.open .chevron { transform: rotate(90deg); }
+
+.card-body { display: none; padding: 0 20px 20px; border-top: 1px solid #334155; }
+.card.open .card-body { display: block; }
+
+.section-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+    color: #64748b; text-transform: uppercase;
+    margin: 16px 0 6px;
+}
+.step-log {
+    background: #0f1117; border-radius: 8px;
+    padding: 12px 14px; font-size: 0.78rem;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    line-height: 1.65; overflow-x: auto;
+    white-space: pre-wrap; word-break: break-word;
+    max-height: 320px; overflow-y: auto;
+    border: 1px solid #1e293b;
+}
+.step-pass { color: #22c55e; }
+.step-fail { color: #ef4444; }
+.step-info { color: #38bdf8; }
+.step-dim  { color: #475569; }
+
+.http-block {
+    background: #0f1117; border-radius: 8px;
+    padding: 12px 14px; font-size: 0.78rem;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    line-height: 1.6; overflow-x: auto;
+    white-space: pre-wrap; word-break: break-word;
+    max-height: 280px; overflow-y: auto;
+    border: 1px solid #1e293b;
+}
+.method  { color: #f59e0b; font-weight: 700; }
+.url     { color: #38bdf8; }
+.key     { color: #a78bfa; }
+.val     { color: #e2e8f0; }
+.status-ok  { color: #22c55e; font-weight: 700; }
+.status-err { color: #ef4444; font-weight: 700; }
+
+.error-box {
+    background: #1c0a0a; border: 1px solid #7f1d1d;
+    border-radius: 8px; padding: 12px 14px;
+    font-size: 0.8rem; color: #fca5a5;
+    white-space: pre-wrap; word-break: break-word;
+}
+.screenshot-wrap { text-align: center; margin-top: 8px; }
+.screenshot-wrap img {
+    max-width: 100%; border-radius: 8px;
+    border: 1px solid #334155;
+    cursor: zoom-in;
+}
+.screenshot-wrap img:hover { border-color: #64748b; }
+</style>
+</head>
+<body>
+<h1>API Test Report</h1>
+<p class="subtitle">Generated: 2026-05-08 01:50:05</p>
+<div class="summary-bar">
+  <span class="badge total">Total: 4</span>
+  <span class="badge pass">Passed: 1</span>
+  <span class="badge fail">Failed: 3</span>
+</div>
+
+<div class="card" data-status="fail">
+  <div class="card-header">
+    <span class="status-dot fail"></span>
+    <div>
+      <div class="tc-id">TC-API-01</div>
+      <div class="tc-name">✘ test_login_valid_credentials</div>
+    </div>
+    <span class="tc-dur">2.52s</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="card-body">
+    <p class="section-label">Request</p>
+    <div class="http-block"><span class="method">POST</span>  <span class="url">https://www2.busonlineticket.com/webapi/api/web/Login</span>
+
+<span class="key">userid</span><span class="step-dim"> : </span><span class="val">+60163553613</span>
+<span class="key">password</span><span class="step-dim"> : </span><span class="val">••••••••</span>
+<span class="key">logintype</span><span class="step-dim"> : </span><span class="val">bot</span></div>
+    <p class="section-label">Response</p>
+    <div class="http-block"><span class="status-ok">HTTP 200</span>
+
+{
+  &quot;result&quot;: {
+    &quot;userindex&quot;: 0,
+    &quot;sessionid&quot;: null,
+    &quot;expirydate&quot;: null,
+    &quot;useremail&quot;: null,
+    &quot;username&quot;: null,
+    &quot;userphone&quot;: null,
+    &quot;userverifiedphone&quot;: null,
+    &quot;userreferralcode&quot;: null,
+    &quot;usercurrency&quot;: null,
+    &quot;userpoints&quot;: 0.0,
+    &quot;userwallet&quot;: 0.0,
+    &quot;useremailverified&quot;: 0,
+    &quot;dob&quot;: null,
+    &quot;linkntuc&quot;: 0,
+    &quot;linkapp&quot;: 0,
+    &quot;buddies&quot;: []
+  },
+  &quot;response&quot;: {
+    &quot;status&quot;: 0,
+    &quot;message&quot;: &quot;Invalid login credentials.&quot;
+  }
+}</div>
+    
+<p class="section-label">Failure Reason</p>
+<div class="error-box">tests\api\test_api_login.py:152: in test_login_valid_credentials
+    pytest.fail(f&quot;Login API rejected credentials (status=0): {api_msg}&quot;)
+E   Failed: Login API rejected credentials (status=0): Invalid login credentials.</div>
+  </div>
+</div>
+<div class="card" data-status="pass">
+  <div class="card-header">
+    <span class="status-dot pass"></span>
+    <div>
+      <div class="tc-id">TC-API-02</div>
+      <div class="tc-name">✔ test_login_invalid_credentials</div>
+    </div>
+    <span class="tc-dur">0.64s</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="card-body">
+    <p class="section-label">Request</p>
+    <div class="http-block"><span class="method">POST</span>  <span class="url">https://www2.busonlineticket.com/webapi/api/web/Login</span>
+
+<span class="key">userid</span><span class="step-dim"> : </span><span class="val">+600000000000</span>
+<span class="key">password</span><span class="step-dim"> : </span><span class="val">••••••••</span></div>
+    <p class="section-label">Response</p>
+    <div class="http-block"><span class="status-ok">HTTP 200</span>
+
+{
+  &quot;result&quot;: {
+    &quot;userindex&quot;: 0,
+    &quot;sessionid&quot;: null,
+    &quot;expirydate&quot;: null,
+    &quot;useremail&quot;: null,
+    &quot;username&quot;: null,
+    &quot;userphone&quot;: null,
+    &quot;userverifiedphone&quot;: null,
+    &quot;userreferralcode&quot;: null,
+    &quot;usercurrency&quot;: null,
+    &quot;userpoints&quot;: 0.0,
+    &quot;userwallet&quot;: 0.0,
+    &quot;useremailverified&quot;: 0,
+    &quot;dob&quot;: null,
+    &quot;linkntuc&quot;: 0,
+    &quot;linkapp&quot;: 0,
+    &quot;buddies&quot;: []
+  },
+  &quot;response&quot;: {
+    &quot;status&quot;: 0,
+    &quot;message&quot;: &quot;Invalid login credentials.&quot;
+  }
+}</div>
+    
+  </div>
+</div>
+<div class="card" data-status="fail">
+  <div class="card-header">
+    <span class="status-dot fail"></span>
+    <div>
+      <div class="tc-id">TC-API-03</div>
+      <div class="tc-name">✘ test_signup_valid_payload_triggers_otp</div>
+    </div>
+    <span class="tc-dur">3.99s</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="card-body">
+    <p class="section-label">Request</p>
+    <div class="http-block"><span class="method">POST</span>  <span class="url">https://www2.busonlineticket.com/index.aspx/UserRegister</span>
+
+<span class="key">phone</span><span class="step-dim"> : </span><span class="val">163553613</span>
+<span class="key">password</span><span class="step-dim"> : </span><span class="val">••••••••</span>
+<span class="key">confirmPassword</span><span class="step-dim"> : </span><span class="val">••••••••</span>
+<span class="key">countryCode</span><span class="step-dim"> : </span><span class="val">60</span></div>
+    <p class="section-label">Response</p>
+    <div class="http-block"><span class="status-err">HTTP 404</span>
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en-US&quot;&gt;
+&lt;head&gt;
+&lt;!-- Google Tag Manager --&gt;
+&lt;script&gt;(function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            &#x27;gtm.start&#x27;:
+                new Date().getTime(), event: &#x27;gtm.js&#x27;
+        }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != &#x27;dataLayer&#x27; ? &#x27;&amp;l=&#x27; + l : &#x27;&#x27;; j.async = true; j.src =
+                &#x27;https://www.googletagmanager.com/gtm.js?id=&#x27; + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, &#x27;script&#x27;, &#x27;dataLayer&#x27;, &#x27;GTM-KMMF3SV&#x27;);&lt;/script&gt;
+&lt;!-- End Google Tag Manager --&gt;
+&lt;!-- Google tag (gtag.js)
+&lt;script async src=&quot;https://www.googletagmanager.com/gtag/js?id=G-7TK60DBJ29&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag(&#x27;js&#x27;, new Date());
+
+  gtag(&#x27;config&#x27;, &#x27;G-7TK60DBJ29&#x27;);
+&lt;/script&gt; --&gt;
+
+&lt;!-- Google tag (gtag.js) --&gt;
+&lt;script async src=&quot;https://www.googletagmanager.com/gtag/js?id=G-5K4GSWQVMW&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag(&#x27;js&#x27;, new Date());
+
+    //gtag(&#x27;config&#x27;, &#x27;G-5K4GSWQVMW&#x27;);
+	
+	// Function to set user ID and send pageview
+	function trackPageView() {
+		var aibot_id = localStorage.getItem(&quot;aibot_id&quot;) || &quot;0&quot;;
+		gtag(&#x27;set&#x27;, { &#x27;user_id&#x27;: aibot_id });
+		gtag(&#x27;config&#x27;, &#x27;G-5K4GSWQVMW&#x27;);
+	}
+
+	// Call the function to track the initial pageview
+	trackPageView();
+&lt;/script&gt;
+    &lt;meta name=&quot;google-site-verification&quot; content=&quot;kAS4H6650AClHmeWJW5vqlXmMVnNbS_GsNh8MSOEmnM&quot; /&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, user-scalable=no&quot;&gt;
+	&lt;meta name=&quot;apple-itunes-app&quot; content=&quot;app-id=977176559&quot;&gt;
+	&lt;meta name=&quot;google-play-app&quot; content=&quot;app-id=com.busonlineticketmy.app&quot;&gt;
+    &lt;link rel=&quot;profile&quot; href=&quot;http://gmpg.org/xfn/11&quot;&gt;
+    &lt;link rel=&quot;pingback&quot; href=&quot;https://www2.busonlineticket.com/xmlrpc.php&quot;&gt;
+	&lt;link rel=&quot;shortcut icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://cdn.busonlineticket.com/image/favicon2.png&quot; /&gt;	
+    &lt;meta name=&#x27;robots&#x27; content=&#x27;noindex, follow&#x27; /&gt;
+
+	&lt;!-- This site is optimized with the Yoast SEO plugin v27.1.1 - https://yoast.com/product/yoast-seo-wordpress/ --&gt;
+	&lt;title&gt;Page Not Found | BusOnlineTicket.com&lt;/title&gt;
+	&lt;meta property=&quot;og:locale&quot; content=&quot;en_US&quot; /&gt;
+	&lt;meta property=&quot;og:title&quot; content=&quot;Page Not Found | BusOnlineTicket.com&quot; /&gt;
+	&lt;meta property=&quot;og:site_name&quot; content=&quot;BusOnlineTicket.com&quot; /&gt;
+	&lt;script type=&quot;application/ld+json&quot; class=&quot;yoast-schema-graph&quot;&gt;{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@graph&quot;:[{&quot;@type&quot;:&quot;WebSite&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#website&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;name&quot;:&quot;BusOnlineTicket.com&quot;,&quot;description&quot;:&quot;Book Online Bus Tickets in Singapore and Malaysia&quot;,&quot;publisher&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;},&quot;potentialAction&quot;:[{&quot;@type&quot;:&quot;SearchAction&quot;,&quot;target&quot;:{&quot;@type&quot;:&quot;EntryPoint&quot;,&quot;urlTemplate&quot;:&quot;https://www2.busonlineticket.com/?s={search_term_string}&quot;},&quot;query-input&quot;:{&quot;@type&quot;:&quot;PropertyValueSpecification&quot;,&quot;valueRequired&quot;:true,&quot;valueName&quot;:&quot;search_term_string&quot;}}],&quot;inLanguage&quot;:&quot;en-US&quot;},{&quot;@type&quot;:&quot;Organization&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;,&quot;name&quot;:&quot;BusOnlineTicket Pte Ltd&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;inLanguage&quot;:&quot;en-US&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;contentUrl&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;width&quot;:300,&quot;height&quot;:132,&quot;caption&quot;:&quot;BusOnlineTicket Pte Ltd&quot;},&quot;image&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;},&quot;sameAs&quot;:[&quot;https://www.facebook.com/busonlineticket&quot;,&quot;https://x.com/busonlineticket&quot;,&quot;https://www.instagram.com/busonlineticket/&quot;]}]}&lt;/script&gt;
+	&lt;!-- / Yoast SEO plugin. --&gt;
+
+... (truncated)</div>
+    
+<p class="section-label">Failure Reason</p>
+<div class="error-box">(&#x27;C:\\Users\\LEE CHUN YIN\\Desktop\\bot_qa\\tests\\api\\test_api_signup.py&#x27;, 120, &quot;Skipped: Signup endpoint returned 404 — &#x27;/index.aspx/UserRegister&#x27; may have changed. Open the site in DevTools → Network tab, attempt a manual signup, then copy the correct path into API_SIGNUP_ENDPOINT in test_api_signup.py.&quot;)</div>
+  </div>
+</div>
+<div class="card" data-status="fail">
+  <div class="card-header">
+    <span class="status-dot fail"></span>
+    <div>
+      <div class="tc-id">TC-API-04</div>
+      <div class="tc-name">✘ test_signup_duplicate_phone_rejected</div>
+    </div>
+    <span class="tc-dur">3.92s</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="card-body">
+    <p class="section-label">Request</p>
+    <div class="http-block"><span class="method">POST</span>  <span class="url">https://www2.busonlineticket.com/index.aspx/UserRegister</span>
+
+<span class="key">phone</span><span class="step-dim"> : </span><span class="val">163553613</span>
+<span class="key">password</span><span class="step-dim"> : </span><span class="val">••••••••</span>
+<span class="key">confirmPassword</span><span class="step-dim"> : </span><span class="val">••••••••</span>
+<span class="key">countryCode</span><span class="step-dim"> : </span><span class="val">60</span></div>
+    <p class="section-label">Response</p>
+    <div class="http-block"><span class="status-err">HTTP 404</span>
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en-US&quot;&gt;
+&lt;head&gt;
+&lt;!-- Google Tag Manager --&gt;
+&lt;script&gt;(function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            &#x27;gtm.start&#x27;:
+                new Date().getTime(), event: &#x27;gtm.js&#x27;
+        }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != &#x27;dataLayer&#x27; ? &#x27;&amp;l=&#x27; + l : &#x27;&#x27;; j.async = true; j.src =
+                &#x27;https://www.googletagmanager.com/gtm.js?id=&#x27; + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, &#x27;script&#x27;, &#x27;dataLayer&#x27;, &#x27;GTM-KMMF3SV&#x27;);&lt;/script&gt;
+&lt;!-- End Google Tag Manager --&gt;
+&lt;!-- Google tag (gtag.js)
+&lt;script async src=&quot;https://www.googletagmanager.com/gtag/js?id=G-7TK60DBJ29&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag(&#x27;js&#x27;, new Date());
+
+  gtag(&#x27;config&#x27;, &#x27;G-7TK60DBJ29&#x27;);
+&lt;/script&gt; --&gt;
+
+&lt;!-- Google tag (gtag.js) --&gt;
+&lt;script async src=&quot;https://www.googletagmanager.com/gtag/js?id=G-5K4GSWQVMW&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag(&#x27;js&#x27;, new Date());
+
+    //gtag(&#x27;config&#x27;, &#x27;G-5K4GSWQVMW&#x27;);
+	
+	// Function to set user ID and send pageview
+	function trackPageView() {
+		var aibot_id = localStorage.getItem(&quot;aibot_id&quot;) || &quot;0&quot;;
+		gtag(&#x27;set&#x27;, { &#x27;user_id&#x27;: aibot_id });
+		gtag(&#x27;config&#x27;, &#x27;G-5K4GSWQVMW&#x27;);
+	}
+
+	// Call the function to track the initial pageview
+	trackPageView();
+&lt;/script&gt;
+    &lt;meta name=&quot;google-site-verification&quot; content=&quot;kAS4H6650AClHmeWJW5vqlXmMVnNbS_GsNh8MSOEmnM&quot; /&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, user-scalable=no&quot;&gt;
+	&lt;meta name=&quot;apple-itunes-app&quot; content=&quot;app-id=977176559&quot;&gt;
+	&lt;meta name=&quot;google-play-app&quot; content=&quot;app-id=com.busonlineticketmy.app&quot;&gt;
+    &lt;link rel=&quot;profile&quot; href=&quot;http://gmpg.org/xfn/11&quot;&gt;
+    &lt;link rel=&quot;pingback&quot; href=&quot;https://www2.busonlineticket.com/xmlrpc.php&quot;&gt;
+	&lt;link rel=&quot;shortcut icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://cdn.busonlineticket.com/image/favicon2.png&quot; /&gt;	
+    &lt;meta name=&#x27;robots&#x27; content=&#x27;noindex, follow&#x27; /&gt;
+
+	&lt;!-- This site is optimized with the Yoast SEO plugin v27.1.1 - https://yoast.com/product/yoast-seo-wordpress/ --&gt;
+	&lt;title&gt;Page Not Found | BusOnlineTicket.com&lt;/title&gt;
+	&lt;meta property=&quot;og:locale&quot; content=&quot;en_US&quot; /&gt;
+	&lt;meta property=&quot;og:title&quot; content=&quot;Page Not Found | BusOnlineTicket.com&quot; /&gt;
+	&lt;meta property=&quot;og:site_name&quot; content=&quot;BusOnlineTicket.com&quot; /&gt;
+	&lt;script type=&quot;application/ld+json&quot; class=&quot;yoast-schema-graph&quot;&gt;{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@graph&quot;:[{&quot;@type&quot;:&quot;WebSite&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#website&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;name&quot;:&quot;BusOnlineTicket.com&quot;,&quot;description&quot;:&quot;Book Online Bus Tickets in Singapore and Malaysia&quot;,&quot;publisher&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;},&quot;potentialAction&quot;:[{&quot;@type&quot;:&quot;SearchAction&quot;,&quot;target&quot;:{&quot;@type&quot;:&quot;EntryPoint&quot;,&quot;urlTemplate&quot;:&quot;https://www2.busonlineticket.com/?s={search_term_string}&quot;},&quot;query-input&quot;:{&quot;@type&quot;:&quot;PropertyValueSpecification&quot;,&quot;valueRequired&quot;:true,&quot;valueName&quot;:&quot;search_term_string&quot;}}],&quot;inLanguage&quot;:&quot;en-US&quot;},{&quot;@type&quot;:&quot;Organization&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;,&quot;name&quot;:&quot;BusOnlineTicket Pte Ltd&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;inLanguage&quot;:&quot;en-US&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;contentUrl&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;width&quot;:300,&quot;height&quot;:132,&quot;caption&quot;:&quot;BusOnlineTicket Pte Ltd&quot;},&quot;image&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;},&quot;sameAs&quot;:[&quot;https://www.facebook.com/busonlineticket&quot;,&quot;https://x.com/busonlineticket&quot;,&quot;https://www.instagram.com/busonlineticket/&quot;]}]}&lt;/script&gt;
+	&lt;!-- / Yoast SEO plugin. --&gt;
+
+... (truncated)</div>
+    
+<p class="section-label">Failure Reason</p>
+<div class="error-box">(&#x27;C:\\Users\\LEE CHUN YIN\\Desktop\\bot_qa\\tests\\api\\test_api_signup.py&#x27;, 185, &quot;Skipped: Signup endpoint returned 404 — &#x27;/index.aspx/UserRegister&#x27; may have changed. Capture the correct path from DevTools → Network and update API_SIGNUP_ENDPOINT.&quot;)</div>
+  </div>
+</div>
+<script>
+document.querySelectorAll('.card-header').forEach(h => {
+    h.addEventListener('click', () => {
+        h.closest('.card').classList.toggle('open');
+    });
+});
+// Auto-expand failed cards
+document.querySelectorAll('.card').forEach(c => {
+    if (c.dataset.status === 'fail') c.classList.add('open');
+});
+</script>
+</body>
+</html>

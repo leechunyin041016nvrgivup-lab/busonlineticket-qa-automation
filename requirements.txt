@@ -1,0 +1,16 @@
+# ─────────────────────────────────────────────
+#  BusOnlineTicket QA Automation — Dependencies
+# ─────────────────────────────────────────────
+
+# Test runner
+pytest==8.2.0
+
+# UI testing
+selenium==4.21.0
+webdriver-manager==4.0.1
+
+# API testing
+requests==2.31.0
+
+# Utilities
+python-dotenv==1.0.1

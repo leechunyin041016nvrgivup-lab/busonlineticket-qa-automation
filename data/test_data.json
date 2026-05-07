@@ -1,0 +1,22 @@
+{
+  "login": {
+    "phone": "163553613",
+    "password": "111111",
+    "country_code": "60"
+  },
+  "signup": {
+    "phone": "163553613",
+    "password": "Test@1234",
+    "confirm_password": "Test@1234",
+    "country_code": "60",
+    "full_name": "QA Tester",
+    "email": "internit2.busonlineticket@gmail.com",
+    "dob": "2004-05-02",
+    "first_name": "QA",
+    "last_name": "Tester"
+  },
+  "base_url": {
+    "ui":  "https://www2.busonlineticket.com",
+    "api": "https://www2.busonlineticket.com"
+  }
+}
