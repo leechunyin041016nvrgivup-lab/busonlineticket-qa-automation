@@ -1,0 +1,89 @@
+name: QA Automation Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────────
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── 2. Python ──────────────────────────────────────────────────────────
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # ── 3. Chrome (for UI tests) ───────────────────────────────────────────
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      # ── 4. Dependencies ────────────────────────────────────────────────────
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # ── 5. Project folder structure ────────────────────────────────────────
+      #  pytest.ini points testpaths = tests, so the layout must match:
+      #
+      #   bot_qa/
+      #   ├── config/
+      #   │   ├── __init__.py
+      #   │   └── settings.py
+      #   ├── data/
+      #   │   └── test_data.json
+      #   ├── tests/
+      #   │   ├── ui/
+      #   │   │   ├── __init__.py
+      #   │   │   ├── test_ui_login.py
+      #   │   │   └── test_ui_signup.py
+      #   │   └── api/
+      #   │       ├── __init__.py
+      #   │       ├── test_api_login.py
+      #   │       └── test_api_signup.py
+      #   ├── utils/
+      #   │   ├── __init__.py
+      #   │   ├── data_loader.py
+      #   │   ├── driver_factory.py
+      #   │   ├── logger.py
+      #   │   └── report_writer.py
+      #   ├── conftest.py
+      #   ├── pytest.ini
+      #   └── requirements.txt
+
+      # ── 6. API tests (no browser needed) ──────────────────────────────────
+      - name: Run API tests
+        env:
+          # No browser required for API tests
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          pytest -m api -v
+
+      # ── 7. UI tests (headless Chrome) ─────────────────────────────────────
+      - name: Run UI tests
+        env:
+          UI_MODE: headless          # triggers --headless=new in driver_factory.py
+          BROWSER: chrome
+          PYTHONPATH: ${{ github.workspace }}
+          DISPLAY: ":99"             # virtual display (fallback, not needed for headless)
+        run: |
+          pytest -m ui -v
+
+      # ── 8. Upload HTML reports as artifacts ────────────────────────────────
+      - name: Upload test reports
+        if: always()                 # upload even when tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: reports/
+          retention-days: 14
