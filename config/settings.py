@@ -30,7 +30,7 @@ API_BASE_URL = "https://www2.busonlineticket.com"
 BROWSER  = os.getenv("BROWSER", "chrome").lower()   # chrome | firefox | edge
 
 # UI_MODE drives both headless flag and timing multiplier
-_UI_MODE = os.getenv("UI_MODE", "headless").lower()  # visible | headless | fast
+_UI_MODE = os.getenv("UI_MODE", "visible").lower()  # visible | headless | fast
 
 # HEADLESS=true env var is still supported as an alias for UI_MODE=headless
 HEADLESS = (
