@@ -23,8 +23,8 @@ import os
 import pathlib
 
 # ── URLs ──────────────────────────────────────────────────────────────────────
-BASE_URL     = "https://www.busonlineticket.com"
-API_BASE_URL = "https://www.busonlineticket.com"
+BASE_URL     = "https://www2.busonlineticket.com"
+API_BASE_URL = "https://www2.busonlineticket.com"
 
 # ── Browser ───────────────────────────────────────────────────────────────────
 BROWSER  = os.getenv("BROWSER", "chrome").lower()   # chrome | firefox | edge
