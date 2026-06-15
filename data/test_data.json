@@ -16,7 +16,7 @@
     "last_name": "Tester"
   },
   "base_url": {
-    "ui":  "https://www2.busonlineticket.com",
-    "api": "https://www2.busonlineticket.com"
+    "ui":  "https://www.busonlineticket.com",
+    "api": "https://www.busonlineticket.com"
   }
 }
