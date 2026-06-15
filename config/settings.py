@@ -49,4 +49,5 @@ PAGE_LOAD_TIMEOUT = 30
 # ── Paths ─────────────────────────────────────────────────────────────────────
 ROOT_DIR    = pathlib.Path(__file__).parent.parent
 DATA_FILE   = ROOT_DIR / "data" / "test_data.json"
+EXCEL_FILE  = ROOT_DIR / "data" / "test_data.xlsx"
 REPORTS_DIR = ROOT_DIR / "reports"

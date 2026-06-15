@@ -4,20 +4,24 @@ utils/report_writer.py
 Generates separate, self-contained HTML reports for UI and API tests
 after the full pytest session completes.
 
-Each report shows:
-  UI report  — test name, status, step log, failure reason, screenshot
-  API report — test name, status, request body, response body, failure reason
+Each report includes:
+  • Search box  — filter cards by test case name in real-time
+  • Status tabs — All / Passed / Failed
+  UI report  — step log, failure reason, screenshot at failure
+  API report — full JSON request body, full JSON response body, failure reason
 """
 
 from __future__ import annotations
 import base64
 import html
+import json
+import re
 import datetime
 from pathlib import Path
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  Shared HTML shell
+#  CSS
 # ─────────────────────────────────────────────────────────────────────────────
 
 _CSS = """
@@ -30,18 +34,50 @@ body {
     min-height: 100vh;
 }
 h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
-.subtitle { font-size: 0.85rem; color: #64748b; margin-bottom: 28px; }
+.subtitle { font-size: 0.85rem; color: #64748b; margin-bottom: 20px; }
+
 .summary-bar {
-    display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap;
+    display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+    align-items: center;
 }
 .badge {
     padding: 8px 18px; border-radius: 8px; font-size: 0.82rem;
     font-weight: 600; letter-spacing: .4px;
 }
-.badge.pass { background: #14532d; color: #86efac; }
-.badge.fail { background: #450a0a; color: #fca5a5; }
+.badge.pass  { background: #14532d; color: #86efac; }
+.badge.fail  { background: #450a0a; color: #fca5a5; }
 .badge.total { background: #1e293b; color: #94a3b8; }
 
+/* ── Toolbar ── */
+.toolbar {
+    display: flex; gap: 12px; margin-bottom: 24px;
+    flex-wrap: wrap; align-items: center;
+}
+.search-box {
+    flex: 1; min-width: 200px; max-width: 400px;
+    background: #1e293b; border: 1px solid #334155;
+    border-radius: 8px; padding: 8px 14px;
+    color: #e2e8f0; font-size: 0.85rem; outline: none;
+}
+.search-box::placeholder { color: #475569; }
+.search-box:focus { border-color: #3b82f6; }
+
+.filter-btn {
+    padding: 7px 16px; border-radius: 8px; border: 1px solid #334155;
+    background: #1e293b; color: #94a3b8; font-size: 0.82rem;
+    font-weight: 600; cursor: pointer; transition: all .15s;
+}
+.filter-btn:hover { border-color: #475569; color: #e2e8f0; }
+.filter-btn.active        { background: #1e40af; border-color: #3b82f6; color: #bfdbfe; }
+.filter-btn.active.passed { background: #14532d; border-color: #22c55e; color: #86efac; }
+.filter-btn.active.failed { background: #450a0a; border-color: #ef4444; color: #fca5a5; }
+
+.no-results {
+    text-align: center; padding: 48px; color: #475569;
+    font-size: 0.9rem; display: none;
+}
+
+/* ── Cards ── */
 .card {
     background: #1e293b;
     border-radius: 12px;
@@ -76,62 +112,116 @@ h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
     color: #64748b; text-transform: uppercase;
     margin: 16px 0 6px;
 }
-.step-log {
+
+/* ── Code blocks ── */
+.step-log, .http-block {
     background: #0f1117; border-radius: 8px;
     padding: 12px 14px; font-size: 0.78rem;
     font-family: 'Cascadia Code', 'Fira Code', monospace;
     line-height: 1.65; overflow-x: auto;
-    white-space: pre-wrap; word-break: break-word;
-    max-height: 320px; overflow-y: auto;
+    white-space: pre; word-break: break-word;
     border: 1px solid #1e293b;
 }
+.step-log { max-height: 320px; overflow-y: auto; white-space: pre-wrap; }
+.http-block { max-height: 380px; overflow-y: auto; }
+
 .step-pass { color: #22c55e; }
 .step-fail { color: #ef4444; }
 .step-info { color: #38bdf8; }
 .step-dim  { color: #475569; }
 
-.http-block {
-    background: #0f1117; border-radius: 8px;
-    padding: 12px 14px; font-size: 0.78rem;
-    font-family: 'Cascadia Code', 'Fira Code', monospace;
-    line-height: 1.6; overflow-x: auto;
-    white-space: pre-wrap; word-break: break-word;
-    max-height: 280px; overflow-y: auto;
-    border: 1px solid #1e293b;
-}
-.method  { color: #f59e0b; font-weight: 700; }
-.url     { color: #38bdf8; }
-.key     { color: #a78bfa; }
-.val     { color: #e2e8f0; }
-.status-ok  { color: #22c55e; font-weight: 700; }
-.status-err { color: #ef4444; font-weight: 700; }
+/* JSON syntax highlighting */
+.j-key    { color: #7dd3fc; }
+.j-str    { color: #86efac; }
+.j-num    { color: #fde68a; }
+.j-bool   { color: #f9a8d4; }
+.j-null   { color: #94a3b8; }
+.j-punct  { color: #64748b; }
+
+.http-method { color: #f59e0b; font-weight: 700; }
+.http-url    { color: #38bdf8; }
+.http-status-ok  { color: #22c55e; font-weight: 700; }
+.http-status-err { color: #ef4444; font-weight: 700; }
+.http-masked { color: #f97316; font-style: italic; }
 
 .error-box {
     background: #1c0a0a; border: 1px solid #7f1d1d;
     border-radius: 8px; padding: 12px 14px;
     font-size: 0.8rem; color: #fca5a5;
     white-space: pre-wrap; word-break: break-word;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
 }
 .screenshot-wrap { text-align: center; margin-top: 8px; }
 .screenshot-wrap img {
     max-width: 100%; border-radius: 8px;
-    border: 1px solid #334155;
-    cursor: zoom-in;
+    border: 1px solid #334155; cursor: zoom-in;
 }
 .screenshot-wrap img:hover { border-color: #64748b; }
 """
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  JavaScript  (search + filter + expand/collapse)
+# ─────────────────────────────────────────────────────────────────────────────
+
 _JS = """
-document.querySelectorAll('.card-header').forEach(h => {
-    h.addEventListener('click', () => {
-        h.closest('.card').classList.toggle('open');
+(function () {
+  // collapse / expand
+  document.querySelectorAll('.card-header').forEach(h => {
+    h.addEventListener('click', () => h.closest('.card').classList.toggle('open'));
+  });
+
+  // auto-expand failed
+  document.querySelectorAll('.card[data-status="fail"]').forEach(c => c.classList.add('open'));
+
+  // search + filter
+  var searchEl = document.getElementById('search');
+  var filterBtns = document.querySelectorAll('.filter-btn');
+  var noResults  = document.getElementById('no-results');
+
+  function applyFilters() {
+    var query  = searchEl ? searchEl.value.trim().toLowerCase() : '';
+    var active = document.querySelector('.filter-btn.active');
+    var status = active ? active.dataset.filter : 'all';
+
+    var cards = document.querySelectorAll('.card');
+    var visible = 0;
+
+    cards.forEach(function(card) {
+      var name      = (card.dataset.name || '').toLowerCase();
+      var tcid      = (card.dataset.tcid || '').toLowerCase();
+      var cardSt    = card.dataset.status;
+
+      var matchSearch = !query || name.includes(query) || tcid.includes(query);
+      var matchStatus = status === 'all' || cardSt === status;
+
+      if (matchSearch && matchStatus) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
     });
-});
-// Auto-expand failed cards
-document.querySelectorAll('.card').forEach(c => {
-    if (c.dataset.status === 'fail') c.classList.add('open');
-});
+
+    if (noResults) noResults.style.display = (visible === 0) ? 'block' : 'none';
+  }
+
+  if (searchEl) searchEl.addEventListener('input', applyFilters);
+
+  filterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      filterBtns.forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      applyFilters();
+    });
+  });
+})();
 """
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  HTML shell
+# ─────────────────────────────────────────────────────────────────────────────
 
 def _shell(title: str, body: str, passed: int, failed: int) -> str:
     total = passed + failed
@@ -152,22 +242,106 @@ def _shell(title: str, body: str, passed: int, failed: int) -> str:
   <span class="badge pass">Passed: {passed}</span>
   <span class="badge fail">Failed: {failed}</span>
 </div>
+<div class="toolbar">
+  <input id="search" class="search-box" type="text" placeholder="Search by test case name or ID…" />
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn passed" data-filter="pass">Passed</button>
+  <button class="filter-btn failed" data-filter="fail">Failed</button>
+</div>
 {body}
+<p class="no-results" id="no-results">No test cases match your search / filter.</p>
 <script>{_JS}</script>
 </body>
 </html>"""
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  Card builders
+#  JSON syntax highlighting
+# ─────────────────────────────────────────────────────────────────────────────
+
+_TOKEN_RE = re.compile(
+    r'("(?:[^"\\]|\\.)*")\s*:'           # key
+    r'|("(?:[^"\\]|\\.)*")'              # string value
+    r'|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)'  # number
+    r'|(true|false)'                     # boolean
+    r'|(null)'                           # null
+    r'|([{}\[\],:])'                     # punctuation
+)
+
+_MASK_KEYS = {"password", "pass", "passwd", "confirmpassword", "secret", "token"}
+
+
+def _highlight_json(obj, mask_keys: set[str] | None = None) -> str:
+    """Return syntax-highlighted HTML for a JSON object (or raw string)."""
+    if isinstance(obj, (dict, list)):
+        raw = json.dumps(obj, indent=2, ensure_ascii=False)
+    else:
+        try:
+            raw = json.dumps(json.loads(str(obj)), indent=2, ensure_ascii=False)
+        except Exception:
+            return html.escape(str(obj))
+
+    if mask_keys is None:
+        mask_keys = _MASK_KEYS
+
+    out: list[str] = []
+    last = 0
+    lines = raw.split("\n")
+    result_lines: list[str] = []
+
+    for line in lines:
+        highlighted = _highlight_line(line, mask_keys)
+        result_lines.append(highlighted)
+
+    return "\n".join(result_lines)
+
+
+def _highlight_line(line: str, mask_keys: set[str]) -> str:
+    out: list[str] = []
+    pos = 0
+    # Check if this line defines a password key → mask the value on next key match
+    # We track whether the previous key was a sensitive one
+    _is_after_sensitive_key = [False]
+
+    for m in _TOKEN_RE.finditer(line):
+        # literal text before this token
+        if m.start() > pos:
+            out.append(html.escape(line[pos:m.start()]))
+        pos = m.end()
+
+        key_match, str_match, num_match, bool_match, null_match, punct_match = m.groups()
+
+        if key_match:
+            inner = key_match[1:-1].lower()
+            _is_after_sensitive_key[0] = any(k in inner for k in mask_keys)
+            out.append(f'<span class="j-key">{html.escape(key_match)}</span>')
+        elif str_match:
+            if _is_after_sensitive_key[0]:
+                out.append('<span class="http-masked">"••••••••"</span>')
+                _is_after_sensitive_key[0] = False
+            else:
+                out.append(f'<span class="j-str">{html.escape(str_match)}</span>')
+        elif num_match:
+            out.append(f'<span class="j-num">{html.escape(num_match)}</span>')
+        elif bool_match:
+            out.append(f'<span class="j-bool">{html.escape(bool_match)}</span>')
+        elif null_match:
+            out.append(f'<span class="j-null">null</span>')
+        elif punct_match:
+            out.append(f'<span class="j-punct">{html.escape(punct_match)}</span>')
+
+    if pos < len(line):
+        out.append(html.escape(line[pos:]))
+
+    return "".join(out)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Shared helpers
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _status_class(passed: bool) -> str:
     return "pass" if passed else "fail"
-
-
-def _icon(passed: bool) -> str:
-    return "✔" if passed else "✘"
 
 
 def _encode_screenshot(path: str | None) -> str | None:
@@ -180,19 +354,23 @@ def _encode_screenshot(path: str | None) -> str | None:
         return None
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+#  Card builders
+# ─────────────────────────────────────────────────────────────────────────────
+
 def build_ui_card(
     tc_id: str,
     name: str,
     passed: bool,
     duration: float,
-    steps: list[dict],          # [{"status": "pass"|"fail"|"info"|"step", "text": str}]
+    steps: list[dict],
     error_message: str | None,
     screenshot_path: str | None,
 ) -> str:
     sc  = _status_class(passed)
     dur = f"{duration:.2f}s"
+    icon = "✔" if passed else "✘"
 
-    # ── step log ─────────────────────────────────────────────────────────────
     step_lines = []
     for s in steps:
         st = s.get("status", "step")
@@ -207,14 +385,12 @@ def build_ui_card(
             step_lines.append(f'<span class="step-dim">     {tx}</span>')
     step_html = "\n".join(step_lines) or '<span class="step-dim">(no steps recorded)</span>'
 
-    # ── error box ─────────────────────────────────────────────────────────────
     error_html = ""
     if not passed and error_message:
         error_html = f"""
 <p class="section-label">Failure Reason</p>
 <div class="error-box">{html.escape(error_message)}</div>"""
 
-    # ── screenshot ────────────────────────────────────────────────────────────
     ss_html = ""
     b64 = _encode_screenshot(screenshot_path)
     if b64:
@@ -225,12 +401,12 @@ def build_ui_card(
 </div>"""
 
     return f"""
-<div class="card" data-status="{sc}">
+<div class="card" data-status="{sc}" data-name="{html.escape(name.lower())}" data-tcid="{html.escape(tc_id.lower())}">
   <div class="card-header">
     <span class="status-dot {sc}"></span>
     <div>
       <div class="tc-id">{html.escape(tc_id)}</div>
-      <div class="tc-name">{_icon(passed)} {html.escape(name)}</div>
+      <div class="tc-name">{icon} {html.escape(name)}</div>
     </div>
     <span class="tc-dur">{dur}</span>
     <span class="chevron">▶</span>
@@ -256,49 +432,35 @@ def build_api_card(
     response_body,
     error_message: str | None,
 ) -> str:
-    sc  = _status_class(passed)
-    dur = f"{duration:.2f}s"
-    import json
+    sc   = _status_class(passed)
+    dur  = f"{duration:.2f}s"
+    icon = "✔" if passed else "✘"
 
-    # ── request block ─────────────────────────────────────────────────────────
-    req_lines = [
-        f'<span class="method">{html.escape(method.upper())}</span>  '
-        f'<span class="url">{html.escape(url)}</span>',
-        "",
-    ]
+    # ── Request block ─────────────────────────────────────────────────────────
+    method_html = f'<span class="http-method">{html.escape(method.upper())}</span>'
+    url_html    = f'<span class="http-url">{html.escape(url)}</span>'
+
     if request_body:
-        for k, v in request_body.items():
-            masked = "pass" in k.lower()
-            v_str  = "••••••••" if masked else str(v)
-            req_lines.append(
-                f'<span class="key">{html.escape(str(k))}</span>'
-                f'<span class="step-dim"> : </span>'
-                f'<span class="val">{html.escape(v_str)}</span>'
-            )
-    req_html = "\n".join(req_lines)
-
-    # ── response block ────────────────────────────────────────────────────────
-    sc_class = "status-ok" if status_code and str(status_code).startswith("2") else "status-err"
-    if isinstance(response_body, dict):
-        body_str = json.dumps(response_body, indent=2)
+        body_highlighted = _highlight_json(request_body)
+        req_content = f"{method_html}  {url_html}\n\n{body_highlighted}"
     else:
-        try:
-            body_str = json.dumps(json.loads(str(response_body)), indent=2)
-        except Exception:
-            body_str = str(response_body)
-    # truncate at 60 lines
-    lines = body_str.splitlines()
-    if len(lines) > 60:
-        lines = lines[:60] + ["... (truncated)"]
-    body_str = "\n".join(html.escape(l) for l in lines)
+        req_content = f"{method_html}  {url_html}\n\n<span class=\"step-dim\">(no request body)</span>"
 
-    resp_html = (
-        f'<span class="{sc_class}">HTTP {status_code}</span>\n\n{body_str}'
-        if status_code else
-        '<span class="step-fail">(no response)</span>'
-    )
+    # ── Response block ────────────────────────────────────────────────────────
+    if status_code:
+        ok = str(status_code).startswith("2")
+        sc_cls  = "http-status-ok" if ok else "http-status-err"
+        sc_html = f'<span class="{sc_cls}">HTTP {status_code}</span>'
 
-    # ── error box ─────────────────────────────────────────────────────────────
+        if response_body is not None:
+            resp_highlighted = _highlight_json(response_body)
+            resp_content = f"{sc_html}\n\n{resp_highlighted}"
+        else:
+            resp_content = f"{sc_html}\n\n<span class=\"step-dim\">(empty body)</span>"
+    else:
+        resp_content = '<span class="step-fail">(no response received)</span>'
+
+    # ── Error box ─────────────────────────────────────────────────────────────
     error_html = ""
     if not passed and error_message:
         error_html = f"""
@@ -306,21 +468,21 @@ def build_api_card(
 <div class="error-box">{html.escape(error_message)}</div>"""
 
     return f"""
-<div class="card" data-status="{sc}">
+<div class="card" data-status="{sc}" data-name="{html.escape(name.lower())}" data-tcid="{html.escape(tc_id.lower())}">
   <div class="card-header">
     <span class="status-dot {sc}"></span>
     <div>
       <div class="tc-id">{html.escape(tc_id)}</div>
-      <div class="tc-name">{_icon(passed)} {html.escape(name)}</div>
+      <div class="tc-name">{icon} {html.escape(name)}</div>
     </div>
     <span class="tc-dur">{dur}</span>
     <span class="chevron">▶</span>
   </div>
   <div class="card-body">
     <p class="section-label">Request</p>
-    <div class="http-block">{req_html}</div>
+    <div class="http-block">{req_content}</div>
     <p class="section-label">Response</p>
-    <div class="http-block">{resp_html}</div>
+    <div class="http-block">{resp_content}</div>
     {error_html}
   </div>
 </div>"""
@@ -331,10 +493,6 @@ def build_api_card(
 # ─────────────────────────────────────────────────────────────────────────────
 
 def write_ui_report(results: list[dict], output_dir: Path) -> Path:
-    """
-    results: list of dicts with keys:
-      tc_id, name, passed, duration, steps, error_message, screenshot_path
-    """
     output_dir.mkdir(parents=True, exist_ok=True)
     cards   = "".join(build_ui_card(**r) for r in results)
     passed  = sum(1 for r in results if r["passed"])
@@ -346,11 +504,6 @@ def write_ui_report(results: list[dict], output_dir: Path) -> Path:
 
 
 def write_api_report(results: list[dict], output_dir: Path) -> Path:
-    """
-    results: list of dicts with keys:
-      tc_id, name, passed, duration, method, url,
-      request_body, status_code, response_body, error_message
-    """
     output_dir.mkdir(parents=True, exist_ok=True)
     cards   = "".join(build_api_card(**r) for r in results)
     passed  = sum(1 for r in results if r["passed"])

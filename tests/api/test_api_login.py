@@ -109,14 +109,7 @@ class TestAPILogin:
             login_data.get("country_code", "60"),
         )
 
-        # What we log/display in the report (password masked)
-        report_request = {
-            "userid":    payload["userid"],
-            "password":  payload["password"],   # report_writer masks keys with "pass"
-            "logintype": payload["logintype"],
-        }
-
-        log_request("POST", url, report_request)
+        log_request("POST", url, payload)
 
         session  = _init_session(base)
         response = session.post(url, json=payload, headers=COMMON_HEADERS, timeout=20)
@@ -125,7 +118,7 @@ class TestAPILogin:
         log_response(response.status_code, body)
 
         # ── Store for HTML report ─────────────────────────────────────────────
-        _store_api_result(request, "POST", url, report_request, response.status_code, body)
+        _store_api_result(request, "POST", url, payload, response.status_code, body)
 
         # ── Assertions ────────────────────────────────────────────────────────
         # 403 means the site's WAF blocked the request based on IP.
@@ -177,12 +170,7 @@ class TestAPILogin:
         url     = f"{base}{API_LOGIN_ENDPOINT}"
         payload = _build_payload("0000000000", "wrongpassword123")
 
-        report_request = {
-            "userid":   payload["userid"],
-            "password": payload["password"],
-        }
-
-        log_request("POST", url, report_request)
+        log_request("POST", url, payload)
 
         response = requests.post(url, json=payload, headers=COMMON_HEADERS, timeout=20)
         body     = _safe_json(response)
@@ -190,7 +178,7 @@ class TestAPILogin:
         log_response(response.status_code, body)
 
         # ── Store for HTML report ─────────────────────────────────────────────
-        _store_api_result(request, "POST", url, report_request, response.status_code, body)
+        _store_api_result(request, "POST", url, payload, response.status_code, body)
 
         # ── Assertion — check API-level status field, not keyword scan ────────
         is_rejection = response.status_code in range(400, 500)

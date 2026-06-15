@@ -196,6 +196,7 @@ def _tc_id(item) -> str:
 
 def pytest_sessionfinish(session, exitstatus):
     from utils.report_writer import write_ui_report, write_api_report
+    from utils.excel_writer  import append_results
 
     out = Path(REPORTS_DIR)
 
@@ -206,6 +207,13 @@ def pytest_sessionfinish(session, exitstatus):
     if _api_results:
         p = write_api_report(_api_results, out)
         print(f"  📄 API report → {p}")
+
+    if _ui_results or _api_results:
+        try:
+            append_results(_ui_results, _api_results)
+            print(f"  📊 Results appended → data/test_data.xlsx")
+        except Exception as e:
+            print(f"  ⚠  Excel write skipped: {e}")
 
 
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
