@@ -45,16 +45,28 @@ class _TestContext:
         self.status_code:   int | None    = None
         self.response_body                = None
         self.screenshot_path: str | None  = None
+        # Set ctx.driver = driver at the start of each UI test to enable
+        # automatic per-step screenshots in the HTML report.
+        self.driver                       = None
+
+    def _snap(self) -> str | None:
+        """Capture current browser state as a base64 PNG, silently skip if unavailable."""
+        if not self.driver:
+            return None
+        try:
+            return self.driver.get_screenshot_as_base64()
+        except Exception:
+            return None
 
     # ── UI helpers ─────────────────────────────────────────────────────────────
     def step(self, text: str):
-        self.steps.append({"status": "info", "text": text})
+        self.steps.append({"status": "info", "text": text, "screenshot": self._snap()})
 
     def passed(self, text: str):
-        self.steps.append({"status": "pass", "text": text})
+        self.steps.append({"status": "pass", "text": text, "screenshot": self._snap()})
 
     def failed(self, text: str):
-        self.steps.append({"status": "fail", "text": text})
+        self.steps.append({"status": "fail", "text": text, "screenshot": self._snap()})
 
     # ── API helpers ────────────────────────────────────────────────────────────
     def record_request(self, method: str, url: str, body: dict | None):
@@ -247,5 +259,8 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
 # ─────────────────────────────────────────────────────────────────────────────
 
 def pytest_configure(config):
-    config.addinivalue_line("markers", "ui:  mark test as a UI (Selenium) test")
-    config.addinivalue_line("markers", "api: mark test as an API (requests) test")
+    config.addinivalue_line("markers", "ui:     mark test as a UI (Selenium) test")
+    config.addinivalue_line("markers", "api:    mark test as an API (requests) test")
+    config.addinivalue_line("markers", "signup:  mark test as requiring OTP (excluded from CI)")
+    config.addinivalue_line("markers", "delete:  mark test as account-deletion cleanup (excluded from CI)")
+    config.addinivalue_line("markers", "booking: mark test as a booking flow test (excluded from CI)")

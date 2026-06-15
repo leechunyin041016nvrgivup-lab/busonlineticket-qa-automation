@@ -57,8 +57,10 @@ jobs:
           # setup-chrome installs both chrome + chromedriver and puts chromedriver on PATH.
           CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
         run: |
-          pytest -m "ui and not signup" -v
-        # signup excluded — uses input() to wait for OTP, would hang forever in CI
+          pytest -m "ui and not signup and not delete and not booking" -v
+        # signup  excluded — uses OTP input, would hang in CI
+        # delete  excluded — depends on signup account (needs OTP to create it)
+        # booking excluded — requires real route availability on live site
 
       # ── 8. Upload HTML reports ─────────────────────────────────────────────
       - name: Upload test reports

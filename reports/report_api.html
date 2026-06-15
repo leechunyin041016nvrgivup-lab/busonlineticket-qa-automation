@@ -14,18 +14,50 @@ body {
     min-height: 100vh;
 }
 h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
-.subtitle { font-size: 0.85rem; color: #64748b; margin-bottom: 28px; }
+.subtitle { font-size: 0.85rem; color: #64748b; margin-bottom: 20px; }
+
 .summary-bar {
-    display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap;
+    display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+    align-items: center;
 }
 .badge {
     padding: 8px 18px; border-radius: 8px; font-size: 0.82rem;
     font-weight: 600; letter-spacing: .4px;
 }
-.badge.pass { background: #14532d; color: #86efac; }
-.badge.fail { background: #450a0a; color: #fca5a5; }
+.badge.pass  { background: #14532d; color: #86efac; }
+.badge.fail  { background: #450a0a; color: #fca5a5; }
 .badge.total { background: #1e293b; color: #94a3b8; }
 
+/* ── Toolbar ── */
+.toolbar {
+    display: flex; gap: 12px; margin-bottom: 24px;
+    flex-wrap: wrap; align-items: center;
+}
+.search-box {
+    flex: 1; min-width: 200px; max-width: 400px;
+    background: #1e293b; border: 1px solid #334155;
+    border-radius: 8px; padding: 8px 14px;
+    color: #e2e8f0; font-size: 0.85rem; outline: none;
+}
+.search-box::placeholder { color: #475569; }
+.search-box:focus { border-color: #3b82f6; }
+
+.filter-btn {
+    padding: 7px 16px; border-radius: 8px; border: 1px solid #334155;
+    background: #1e293b; color: #94a3b8; font-size: 0.82rem;
+    font-weight: 600; cursor: pointer; transition: all .15s;
+}
+.filter-btn:hover { border-color: #475569; color: #e2e8f0; }
+.filter-btn.active        { background: #1e40af; border-color: #3b82f6; color: #bfdbfe; }
+.filter-btn.active.passed { background: #14532d; border-color: #22c55e; color: #86efac; }
+.filter-btn.active.failed { background: #450a0a; border-color: #ef4444; color: #fca5a5; }
+
+.no-results {
+    text-align: center; padding: 48px; color: #475569;
+    font-size: 0.9rem; display: none;
+}
+
+/* ── Cards ── */
 .card {
     background: #1e293b;
     border-radius: 12px;
@@ -60,177 +92,216 @@ h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
     color: #64748b; text-transform: uppercase;
     margin: 16px 0 6px;
 }
-.step-log {
+
+/* ── Code blocks ── */
+.step-log, .http-block {
     background: #0f1117; border-radius: 8px;
     padding: 12px 14px; font-size: 0.78rem;
     font-family: 'Cascadia Code', 'Fira Code', monospace;
     line-height: 1.65; overflow-x: auto;
-    white-space: pre-wrap; word-break: break-word;
-    max-height: 320px; overflow-y: auto;
+    white-space: pre; word-break: break-word;
     border: 1px solid #1e293b;
 }
+.step-log { max-height: 320px; overflow-y: auto; white-space: pre-wrap; }
+.http-block { max-height: 380px; overflow-y: auto; }
+
 .step-pass { color: #22c55e; }
 .step-fail { color: #ef4444; }
 .step-info { color: #38bdf8; }
 .step-dim  { color: #475569; }
 
-.http-block {
-    background: #0f1117; border-radius: 8px;
-    padding: 12px 14px; font-size: 0.78rem;
-    font-family: 'Cascadia Code', 'Fira Code', monospace;
-    line-height: 1.6; overflow-x: auto;
-    white-space: pre-wrap; word-break: break-word;
-    max-height: 280px; overflow-y: auto;
-    border: 1px solid #1e293b;
-}
-.method  { color: #f59e0b; font-weight: 700; }
-.url     { color: #38bdf8; }
-.key     { color: #a78bfa; }
-.val     { color: #e2e8f0; }
-.status-ok  { color: #22c55e; font-weight: 700; }
-.status-err { color: #ef4444; font-weight: 700; }
+/* JSON syntax highlighting */
+.j-key    { color: #7dd3fc; }
+.j-str    { color: #86efac; }
+.j-num    { color: #fde68a; }
+.j-bool   { color: #f9a8d4; }
+.j-null   { color: #94a3b8; }
+.j-punct  { color: #64748b; }
+
+.http-method { color: #f59e0b; font-weight: 700; }
+.http-url    { color: #38bdf8; }
+.http-status-ok  { color: #22c55e; font-weight: 700; }
+.http-status-err { color: #ef4444; font-weight: 700; }
+.http-masked { color: #f97316; font-style: italic; }
 
 .error-box {
     background: #1c0a0a; border: 1px solid #7f1d1d;
     border-radius: 8px; padding: 12px 14px;
     font-size: 0.8rem; color: #fca5a5;
     white-space: pre-wrap; word-break: break-word;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
 }
 .screenshot-wrap { text-align: center; margin-top: 8px; }
 .screenshot-wrap img {
     max-width: 100%; border-radius: 8px;
-    border: 1px solid #334155;
-    cursor: zoom-in;
+    border: 1px solid #334155; cursor: zoom-in;
 }
 .screenshot-wrap img:hover { border-color: #64748b; }
 </style>
 </head>
 <body>
 <h1>API Test Report</h1>
-<p class="subtitle">Generated: 2026-05-08 01:50:05</p>
+<p class="subtitle">Generated: 2026-06-15 15:49:13</p>
 <div class="summary-bar">
   <span class="badge total">Total: 4</span>
   <span class="badge pass">Passed: 1</span>
   <span class="badge fail">Failed: 3</span>
 </div>
+<div class="toolbar">
+  <input id="search" class="search-box" type="text" placeholder="Search by test case name or ID…" />
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn passed" data-filter="pass">Passed</button>
+  <button class="filter-btn failed" data-filter="fail">Failed</button>
+</div>
 
-<div class="card" data-status="fail">
+<div class="card" data-status="fail" data-name="test_login_valid_credentials" data-tcid="tc-api-01">
   <div class="card-header">
     <span class="status-dot fail"></span>
     <div>
       <div class="tc-id">TC-API-01</div>
       <div class="tc-name">✘ test_login_valid_credentials</div>
     </div>
-    <span class="tc-dur">2.52s</span>
+    <span class="tc-dur">2.22s</span>
     <span class="chevron">▶</span>
   </div>
   <div class="card-body">
     <p class="section-label">Request</p>
-    <div class="http-block"><span class="method">POST</span>  <span class="url">https://www2.busonlineticket.com/webapi/api/web/Login</span>
+    <div class="http-block"><span class="http-method">POST</span>  <span class="http-url">https://www2.busonlineticket.com/webapi/api/web/Login</span>
 
-<span class="key">userid</span><span class="step-dim"> : </span><span class="val">+60163553613</span>
-<span class="key">password</span><span class="step-dim"> : </span><span class="val">••••••••</span>
-<span class="key">logintype</span><span class="step-dim"> : </span><span class="val">bot</span></div>
+<span class="j-punct">{</span>
+  <span class="j-key">&quot;info&quot;</span> <span class="j-punct">{</span>
+    <span class="j-key">&quot;profile&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;hashkey&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;appversion&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;googleresponse&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;language&quot;</span> <span class="j-str">&quot;en&quot;</span>
+  <span class="j-punct">}</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;userid&quot;</span> <span class="j-str">&quot;+60163553613&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;password&quot;</span> <span class="http-masked">"••••••••"</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;registerid&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;name&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;logintype&quot;</span> <span class="j-str">&quot;bot&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;authcode&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;currency&quot;</span> <span class="j-str">&quot;SGD&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;fbid&quot;</span> <span class="j-num">0</span>
+<span class="j-punct">}</span></div>
     <p class="section-label">Response</p>
-    <div class="http-block"><span class="status-ok">HTTP 200</span>
+    <div class="http-block"><span class="http-status-ok">HTTP 200</span>
 
-{
-  &quot;result&quot;: {
-    &quot;userindex&quot;: 0,
-    &quot;sessionid&quot;: null,
-    &quot;expirydate&quot;: null,
-    &quot;useremail&quot;: null,
-    &quot;username&quot;: null,
-    &quot;userphone&quot;: null,
-    &quot;userverifiedphone&quot;: null,
-    &quot;userreferralcode&quot;: null,
-    &quot;usercurrency&quot;: null,
-    &quot;userpoints&quot;: 0.0,
-    &quot;userwallet&quot;: 0.0,
-    &quot;useremailverified&quot;: 0,
-    &quot;dob&quot;: null,
-    &quot;linkntuc&quot;: 0,
-    &quot;linkapp&quot;: 0,
-    &quot;buddies&quot;: []
-  },
-  &quot;response&quot;: {
-    &quot;status&quot;: 0,
-    &quot;message&quot;: &quot;Invalid login credentials.&quot;
-  }
-}</div>
+<span class="j-punct">{</span>
+  <span class="j-key">&quot;result&quot;</span> <span class="j-punct">{</span>
+    <span class="j-key">&quot;userindex&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;sessionid&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;expirydate&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;useremail&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;username&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;userphone&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;userverifiedphone&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;userreferralcode&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;usercurrency&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;userpoints&quot;</span> <span class="j-num">0.0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;userwallet&quot;</span> <span class="j-num">0.0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;useremailverified&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;dob&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;linkntuc&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;linkapp&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;buddies&quot;</span> <span class="j-punct">[</span><span class="j-punct">]</span>
+  <span class="j-punct">}</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;response&quot;</span> <span class="j-punct">{</span>
+    <span class="j-key">&quot;status&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;message&quot;</span> <span class="j-str">&quot;Invalid login credentials.&quot;</span>
+  <span class="j-punct">}</span>
+<span class="j-punct">}</span></div>
     
 <p class="section-label">Failure Reason</p>
-<div class="error-box">tests\api\test_api_login.py:152: in test_login_valid_credentials
+<div class="error-box">tests\api\test_api_login.py:155: in test_login_valid_credentials
     pytest.fail(f&quot;Login API rejected credentials (status=0): {api_msg}&quot;)
 E   Failed: Login API rejected credentials (status=0): Invalid login credentials.</div>
   </div>
 </div>
-<div class="card" data-status="pass">
+<div class="card" data-status="pass" data-name="test_login_invalid_credentials" data-tcid="tc-api-02">
   <div class="card-header">
     <span class="status-dot pass"></span>
     <div>
       <div class="tc-id">TC-API-02</div>
       <div class="tc-name">✔ test_login_invalid_credentials</div>
     </div>
-    <span class="tc-dur">0.64s</span>
+    <span class="tc-dur">0.35s</span>
     <span class="chevron">▶</span>
   </div>
   <div class="card-body">
     <p class="section-label">Request</p>
-    <div class="http-block"><span class="method">POST</span>  <span class="url">https://www2.busonlineticket.com/webapi/api/web/Login</span>
+    <div class="http-block"><span class="http-method">POST</span>  <span class="http-url">https://www2.busonlineticket.com/webapi/api/web/Login</span>
 
-<span class="key">userid</span><span class="step-dim"> : </span><span class="val">+600000000000</span>
-<span class="key">password</span><span class="step-dim"> : </span><span class="val">••••••••</span></div>
+<span class="j-punct">{</span>
+  <span class="j-key">&quot;info&quot;</span> <span class="j-punct">{</span>
+    <span class="j-key">&quot;profile&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;hashkey&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;appversion&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;googleresponse&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;language&quot;</span> <span class="j-str">&quot;en&quot;</span>
+  <span class="j-punct">}</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;userid&quot;</span> <span class="j-str">&quot;+600000000000&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;password&quot;</span> <span class="http-masked">"••••••••"</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;registerid&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;name&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;logintype&quot;</span> <span class="j-str">&quot;bot&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;authcode&quot;</span> <span class="j-str">&quot;&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;currency&quot;</span> <span class="j-str">&quot;SGD&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;fbid&quot;</span> <span class="j-num">0</span>
+<span class="j-punct">}</span></div>
     <p class="section-label">Response</p>
-    <div class="http-block"><span class="status-ok">HTTP 200</span>
+    <div class="http-block"><span class="http-status-ok">HTTP 200</span>
 
-{
-  &quot;result&quot;: {
-    &quot;userindex&quot;: 0,
-    &quot;sessionid&quot;: null,
-    &quot;expirydate&quot;: null,
-    &quot;useremail&quot;: null,
-    &quot;username&quot;: null,
-    &quot;userphone&quot;: null,
-    &quot;userverifiedphone&quot;: null,
-    &quot;userreferralcode&quot;: null,
-    &quot;usercurrency&quot;: null,
-    &quot;userpoints&quot;: 0.0,
-    &quot;userwallet&quot;: 0.0,
-    &quot;useremailverified&quot;: 0,
-    &quot;dob&quot;: null,
-    &quot;linkntuc&quot;: 0,
-    &quot;linkapp&quot;: 0,
-    &quot;buddies&quot;: []
-  },
-  &quot;response&quot;: {
-    &quot;status&quot;: 0,
-    &quot;message&quot;: &quot;Invalid login credentials.&quot;
-  }
-}</div>
+<span class="j-punct">{</span>
+  <span class="j-key">&quot;result&quot;</span> <span class="j-punct">{</span>
+    <span class="j-key">&quot;userindex&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;sessionid&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;expirydate&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;useremail&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;username&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;userphone&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;userverifiedphone&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;userreferralcode&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;usercurrency&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;userpoints&quot;</span> <span class="j-num">0.0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;userwallet&quot;</span> <span class="j-num">0.0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;useremailverified&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;dob&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;linkntuc&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;linkapp&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;buddies&quot;</span> <span class="j-punct">[</span><span class="j-punct">]</span>
+  <span class="j-punct">}</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;response&quot;</span> <span class="j-punct">{</span>
+    <span class="j-key">&quot;status&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
+    <span class="j-key">&quot;message&quot;</span> <span class="j-str">&quot;Invalid login credentials.&quot;</span>
+  <span class="j-punct">}</span>
+<span class="j-punct">}</span></div>
     
   </div>
 </div>
-<div class="card" data-status="fail">
+<div class="card" data-status="fail" data-name="test_signup_valid_payload_triggers_otp" data-tcid="tc-api-03">
   <div class="card-header">
     <span class="status-dot fail"></span>
     <div>
       <div class="tc-id">TC-API-03</div>
       <div class="tc-name">✘ test_signup_valid_payload_triggers_otp</div>
     </div>
-    <span class="tc-dur">3.99s</span>
+    <span class="tc-dur">3.20s</span>
     <span class="chevron">▶</span>
   </div>
   <div class="card-body">
     <p class="section-label">Request</p>
-    <div class="http-block"><span class="method">POST</span>  <span class="url">https://www2.busonlineticket.com/index.aspx/UserRegister</span>
+    <div class="http-block"><span class="http-method">POST</span>  <span class="http-url">https://www2.busonlineticket.com/index.aspx/UserRegister</span>
 
-<span class="key">phone</span><span class="step-dim"> : </span><span class="val">163553613</span>
-<span class="key">password</span><span class="step-dim"> : </span><span class="val">••••••••</span>
-<span class="key">confirmPassword</span><span class="step-dim"> : </span><span class="val">••••••••</span>
-<span class="key">countryCode</span><span class="step-dim"> : </span><span class="val">60</span></div>
+<span class="j-punct">{</span>
+  <span class="j-key">&quot;phone&quot;</span> <span class="j-str">&quot;163553613&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;password&quot;</span> <span class="http-masked">"••••••••"</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;confirmPassword&quot;</span> <span class="http-masked">"••••••••"</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;countryCode&quot;</span> <span class="j-str">&quot;60&quot;</span>
+<span class="j-punct">}</span></div>
     <p class="section-label">Response</p>
-    <div class="http-block"><span class="status-err">HTTP 404</span>
+    <div class="http-block"><span class="http-status-err">HTTP 404</span>
 
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en-US&quot;&gt;
@@ -283,41 +354,381 @@ E   Failed: Login API rejected credentials (status=0): Invalid login credentials
     &lt;link rel=&quot;pingback&quot; href=&quot;https://www2.busonlineticket.com/xmlrpc.php&quot;&gt;
 	&lt;link rel=&quot;shortcut icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://cdn.busonlineticket.com/image/favicon2.png&quot; /&gt;	
     &lt;meta name=&#x27;robots&#x27; content=&#x27;noindex, follow&#x27; /&gt;
+
+	&lt;!-- This site is optimized with the Yoast SEO plugin v27.1.1 - https://yoast.com/product/yoast-seo-wordpress/ --&gt;
+	&lt;title&gt;Page Not Found | BusOnlineTicket.com&lt;/title&gt;
+	&lt;meta property=&quot;og:locale&quot; content=&quot;en_US&quot; /&gt;
+	&lt;meta property=&quot;og:title&quot; content=&quot;Page Not Found | BusOnlineTicket.com&quot; /&gt;
+	&lt;meta property=&quot;og:site_name&quot; content=&quot;BusOnlineTicket.com&quot; /&gt;
+	&lt;script type=&quot;application/ld+json&quot; class=&quot;yoast-schema-graph&quot;&gt;{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@graph&quot;:[{&quot;@type&quot;:&quot;WebSite&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#website&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;name&quot;:&quot;BusOnlineTicket.com&quot;,&quot;description&quot;:&quot;Book Online Bus Tickets in Singapore and Malaysia&quot;,&quot;publisher&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;},&quot;potentialAction&quot;:[{&quot;@type&quot;:&quot;SearchAction&quot;,&quot;target&quot;:{&quot;@type&quot;:&quot;EntryPoint&quot;,&quot;urlTemplate&quot;:&quot;https://www2.busonlineticket.com/?s={search_term_string}&quot;},&quot;query-input&quot;:{&quot;@type&quot;:&quot;PropertyValueSpecification&quot;,&quot;valueRequired&quot;:true,&quot;valueName&quot;:&quot;search_term_string&quot;}}],&quot;inLanguage&quot;:&quot;en-US&quot;},{&quot;@type&quot;:&quot;Organization&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;,&quot;name&quot;:&quot;BusOnlineTicket Pte Ltd&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;inLanguage&quot;:&quot;en-US&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;contentUrl&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;width&quot;:300,&quot;height&quot;:132,&quot;caption&quot;:&quot;BusOnlineTicket Pte Ltd&quot;},&quot;image&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;},&quot;sameAs&quot;:[&quot;https://www.facebook.com/busonlineticket&quot;,&quot;https://x.com/busonlineticket&quot;,&quot;https://www.instagram.com/busonlineticket/&quot;]}]}&lt;/script&gt;
+	&lt;!-- / Yoast SEO plugin. --&gt;
+
+
+&lt;link rel=&#x27;dns-prefetch&#x27; href=&#x27;//cdn.busonlineticket.com&#x27; /&gt;
+&lt;style id=&#x27;wp-img-auto-sizes-contain-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
+img:is([sizes=auto i],[sizes^=&quot;auto,&quot; i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+&lt;/style&gt;
+&lt;link rel=&#x27;stylesheet&#x27; id=&#x27;wp-block-library-css&#x27; href=&#x27;https://www2.busonlineticket.com/wp-includes/css/dist/block-library/style.min.css?ver=6.9.4&#x27; type=&#x27;text/css&#x27; media=&#x27;all&#x27; /&gt;
+&lt;style id=&#x27;wp-block-library-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
+/*wp_block_styles_on_demand_placeholder:6a2fae2b3c3a3*/
+/*# sourceURL=wp-block-library-inline-css */
+&lt;/style&gt;
+&lt;style id=&#x27;classic-theme-styles-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+&lt;/style&gt;
+&lt;link rel=&#x27;stylesheet&#x27; id=&#x27;wpml-legacy-dropdown-click-0-css&#x27; href=&#x27;https://www2.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/templates/language-switchers/legacy-dropdown-click/style.min.css?ver=1&#x27; type=&#x27;text/css&#x27; media=&#x27;all&#x27; /&gt;
+&lt;style id=&#x27;wpml-legacy-dropdown-click-0-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
+.wpml-ls-statics-shortcode_actions{background-color:#ffffff;}.wpml-ls-statics-shortcode_actions, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu, .wpml-ls-statics-shortcode_actions a {border-color:#cdcdcd;}.wpml-ls-statics-shortcode_actions a, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a:link, .wpml-ls-statics-shortcode_actions li:not(.wpml-ls-current-language) .wpml-ls-link, .wpml-ls-statics-shortcode_actions li:not(.wpml-ls-current-language) .wpml-ls-link:link {color:#444444;background-color:#ffffff;}.wpml-ls-statics-shortcode_actions a, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a:hover,.wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a:focus, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a:link:hover, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a:link:focus {color:#000000;background-color:#eeeeee;}.wpml-ls-statics-shortcode_actions .wpml-ls-current-language &gt; a {color:#444444;background-color:#ffffff;}.wpml-ls-statics-shortcode_actions .wpml-ls-current-language:hover&gt;a, .wpml-ls-statics-shortcode_actions .wpml-ls-current-language&gt;a:focus {color:#000000;background-color:#eeeeee;}
+.lang_sel_sel{width:100px;padding:5px 10px !important;border:0px !important;} #lang_sel_click ul ul{top:30px !important;}
+/*# sourceURL=wpml-legacy-dropdown-click-0-inline-css */
+&lt;/style&gt;
+&lt;link rel=&#x27;stylesheet&#x27; id=&#x27;BOT-css&#x27; href=&#x27;https://www2.busonlineticket.com/css/style_min.css?ver=20251129&#x27; type=&#x27;text/css&#x27; media=&#x27;all&#x27; /&gt;
+&lt;link rel=&#x27;stylesheet&#x27; id=&#x27;bootstrap-css&#x27; href=&#x27;https://cdn.busonlineticket.com/css/bootstrap.min.css?ver=3.3.6&#x27; type=&#x27;text/css&#x27; media=&#x27;all&#x27; /&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://www2.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/templates/language-switchers/legacy-dropdown-click/script.min.js?ver=1&quot; id=&quot;wpml-legacy-dropdown-click-0-js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;https://api.w.org/&quot; href=&quot;https://www2.busonlineticket.com/wp-json/&quot; /&gt;&lt;link rel=&quot;EditURI&quot; type=&quot;application/rsd+xml&quot; title=&quot;RSD&quot; href=&quot;https://www2.busonlineticket.com/xmlrpc.php?rsd&quot; /&gt;
+&lt;meta name=&quot;generator&quot; content=&quot;WordPress 6.9.4&quot; /&gt;
+&lt;meta name=&quot;generator&quot; content=&quot;WPML ver:4.6.4 stt:61,1,64;&quot; /&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function (){
+	var userAgent = navigator.userAgent;
+	if (userAgent == &quot;appsite&quot;) {
+		jQuery(&quot;.content .btn&quot;).hide();
+		jQuery(&quot;.content .book-now&quot;).hide();
+		jQuery(&quot;.pwp-bus&quot;).hide();
+		jQuery(&quot;#breadcrumbs&quot;).hide();
+		jQuery(&quot;a&quot;).css(&#x27;color&#x27;, &#x27;#000&#x27;);
+		jQuery(&quot;a span&quot;).css(&#x27;color&#x27;, &#x27;#000&#x27;);
+		jQuery(&quot;a&quot;).click(function(e) {
+			e.preventDefault();
+		});
+	}
+});
+&lt;/script&gt;	&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.min.js&quot;&gt;&lt;/script&gt;
+   &lt;script src=&quot;https://cdn.busonlineticket.com/js/all_route.js?v=26262626JunJun1515&quot;&gt;&lt;/script&gt;  		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.busonlineticket.com/fonts/fontawesome/css/all.min.css?ver=6.1.0&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/mainv2.css?ver=26260615&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/sitev2.css?ver=26260615&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/style_min.css?ver=26260615&quot; /&gt;
+		&lt;!--&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/global_style_homepagev2.css?ver=26260615&quot; /&gt;--&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.busonlineticket.com/css/jquery.smartbanner.css&quot; /&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/slick.min.js?v=26260615&quot;&gt;&lt;/script&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://www2.busonlineticket.com/js/custom_main.js?v=26260615&quot;&gt;&lt;/script&gt;	
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.dotdotdot.js?v=26260615&quot;&gt;&lt;/script&gt;	
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/isotope.pkgd.min.js?v=26260615&quot;&gt;&lt;/script&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.smartbanner.js?ver=26260615&quot;&gt;&lt;/script&gt;
 
-	&lt;!-- This site is optimized with the Yoast SEO plugin v27.1.1 - https://yoast.com/product/yoast-seo-wordpress/ --&gt;
-	&lt;title&gt;Page Not Found | BusOnlineTicket.com&lt;/title&gt;
-	&lt;meta property=&quot;og:locale&quot; content=&quot;en_US&quot; /&gt;
-	&lt;meta property=&quot;og:title&quot; content=&quot;Page Not Found | BusOnlineTicket.com&quot; /&gt;
-	&lt;meta property=&quot;og:site_name&quot; content=&quot;BusOnlineTicket.com&quot; /&gt;
-	&lt;script type=&quot;application/ld+json&quot; class=&quot;yoast-schema-graph&quot;&gt;{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@graph&quot;:[{&quot;@type&quot;:&quot;WebSite&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#website&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;name&quot;:&quot;BusOnlineTicket.com&quot;,&quot;description&quot;:&quot;Book Online Bus Tickets in Singapore and Malaysia&quot;,&quot;publisher&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;},&quot;potentialAction&quot;:[{&quot;@type&quot;:&quot;SearchAction&quot;,&quot;target&quot;:{&quot;@type&quot;:&quot;EntryPoint&quot;,&quot;urlTemplate&quot;:&quot;https://www2.busonlineticket.com/?s={search_term_string}&quot;},&quot;query-input&quot;:{&quot;@type&quot;:&quot;PropertyValueSpecification&quot;,&quot;valueRequired&quot;:true,&quot;valueName&quot;:&quot;search_term_string&quot;}}],&quot;inLanguage&quot;:&quot;en-US&quot;},{&quot;@type&quot;:&quot;Organization&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;,&quot;name&quot;:&quot;BusOnlineTicket Pte Ltd&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;inLanguage&quot;:&quot;en-US&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;contentUrl&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;width&quot;:300,&quot;height&quot;:132,&quot;caption&quot;:&quot;BusOnlineTicket Pte Ltd&quot;},&quot;image&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;},&quot;sameAs&quot;:[&quot;https://www.facebook.com/busonlineticket&quot;,&quot;https://x.com/busonlineticket&quot;,&quot;https://www.instagram.com/busonlineticket/&quot;]}]}&lt;/script&gt;
-	&lt;!-- / Yoast SEO plugin. --&gt;
+&lt;script&gt;
+  var jq = jQuery.noConflict();
+	jq(document).ready(function () {
+		jq(&#x27;.logedin_desktop&#x27;).click(function(){
+			console.log(&#x27;clicked logout&#x27;);
+			jq(this).addClass(&#x27;hidden&#x27;);
+			jq(&#x27;.recent-search-wrapper .btn-cloneSubmit&#x27;).prop(&quot;disabled&quot;, false);
+		});
+	});
+	jq(function() { jq.smartbanner({title: &quot;BusOnlineTicket.com&quot;,icon:&quot;https://play-lh.googleusercontent.com/k2GhFBP3LX4OYODDwP01mR_lVkJVvrLqn_EwbHA0otGR18Za_bH4ud1yBBpZanu0FPo4=w240-h480-rw&quot; }) } )
+	&lt;/script&gt;
+&lt;/head&gt;
+&lt;body class=&quot;error404 wp-theme-BOT metaslider-plugin&quot;&gt;
+		 
+		&lt;!-- Google Tag Manager (noscript) --&gt;
+		&lt;noscript&gt;&lt;iframe src=&quot;https://www.googletagmanager.com/ns.html?id=GTM-KMMF3SV&quot;
+		height=&quot;0&quot; width=&quot;0&quot; style=&quot;display:none;visibility:hidden&quot;&gt;&lt;/iframe&gt;&lt;/noscript&gt;
+		&lt;!-- End Google Tag Manager (noscript) --&gt;
+    			&lt;div class=&quot;global-wrap header-wrap container-fluid&quot;&gt;
+        	&lt;div class=&quot;row&quot;&gt;
+            	&lt;header id=&quot;main-header&quot; style=&quot;&quot;&gt;
+					&lt;div class=&quot;header-top &quot;&gt;
+						&lt;div class=&quot;header_container&quot;&gt;
+							&lt;div class=&quot;header_row&quot;&gt;
+								&lt;div class=&quot;header_logo_wrap&quot;&gt;
+									&lt;a class=&quot;logo-responsive&quot; href=&quot;https://www2.busonlineticket.com/&quot; &gt;
+																					&lt;div class=&quot;logo-pc hidden-xs&quot;&gt;&lt;img src=&quot;https://cdn.busonlineticket.com/images/2022/05/Logo-01.png&quot; alt=&quot;BusOnlineTicket.com&quot; title=&quot;BusOnlineTicket.com&quot; style=&quot;padding:15px 0px;&quot; class=&quot;hidden-xs img-responsive&quot;  /&gt;&lt;/div&gt;
+											
+										                                	&lt;/a&gt;
+									&lt;div class=&quot;mobile_menu_trigger&quot;&gt;
+									&lt;div class=&quot;logo-mb hidden-sm hidden-md hidden-lg&quot;&gt;&lt;a href=&quot;https://www2.busonlineticket.com&quot;&gt;&lt;img src=&quot;https://cdn.busonlineticket.com/images/2022/05/Logo-01.png&quot; style=&quot;width: 90%;padding:20px 0px;&quot; alt=&quot;BusOnlineTicket.com&quot; title=&quot;BusOnlineTicket.com&quot; /&gt;&lt;/a&gt;&lt;/div&gt;
+										&lt;!-- Mobile display --&gt;
+										&lt;button id=&quot;open-nav&quot; type=&quot;button&quot; class=&quot;navbar-toggle topbar-btn&quot; data-target=&quot;.navbar-ex1-collapse&quot;&gt;
+											&lt;i class=&quot;far fa-bars&quot;&gt;&lt;/i&gt;
+										&lt;/button&gt;
+																			&lt;/div&gt;
+                            	&lt;/div&gt;
+                            	&lt;div class=&quot;header_menu_wrap&quot;&gt;
+									&lt;div id=&quot;mobile-new-menu&quot;&gt;&lt;/div&gt;
+									&lt;div class=&quot;header-top-login&quot;&gt;
+										&lt;div class=&quot;container&quot;&gt;
+											&lt;!--&lt;div class=&quot;col-md-3&quot;&gt;
+												&lt;ul class=&quot;list-inline&quot;&gt;
+													&lt;li style=&quot;margin-right:0px;&quot;&gt;&lt;a href=&quot;https://www.busonlineticket.com&quot; rel=&quot;nofollow&quot;&gt;&lt;img src=&quot;https://www.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/en.png&quot; alt=&quot;English Language&quot;&gt; ENG&lt;/a&gt;&lt;/li&gt;
+													&lt;li&gt;&lt;a href=&quot;https://my.busonlineticket.com&quot; rel=&quot;nofollow&quot;&gt;&lt;img src=&quot;https://www.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/ms.png&quot; alt=&quot;Malay Language&quot;&gt; MLY&lt;/a&gt;&lt;/li&gt;	
+													&lt;li&gt;&lt;a href=&quot;https://cn.busonlineticket.com&quot; rel=&quot;nofollow&quot;&gt;&lt;img src=&quot;https://www.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/cn.png&quot; alt=&quot;Chinese Language&quot;&gt; &amp;#20013;&amp;#25991;&lt;/a&gt;&lt;/li&gt;	
+												&lt;/ul&gt;
+											&lt;/div&gt;
+											&lt;div class=&quot;col-md-9&quot;&gt;
+												&lt;div class=&quot;pull-right&quot;&gt;
+													&lt;ul class=&quot;list-inline&quot;&gt;
+														&lt;li&gt;&lt;a id=&quot;emailBot&quot; href=&quot;mailto:sales@busonlineticket.com&quot;&gt;&lt;i class=&quot;fa fa-envelope&quot; style=&quot;font-size:104.545%;vertical-align: -.125em;&quot;&gt;&lt;/i&gt; sales@busonlineticket.com&lt;/a&gt;&lt;/li&gt;
+														&lt;li class=&quot;hidden-xs text-white&quot; id=&quot;liLogin&quot;&gt;&lt;/li&gt;
+														&lt;li class=&quot;hidden-xs text-white hidden&quot; id=&quot;liLogedIn&quot;&gt;&lt;/li&gt;
+														&lt;li class=&quot;hidden-xs text-white&quot; id=&quot;liCheckBooking&quot;&gt;&lt;/li&gt;
+													&lt;/ul&gt;
+												&lt;/div&gt;
+											&lt;/div&gt;--&gt;
+											&lt;div class=&quot;header_top_menu_wrap&quot;&gt;
 
-... (truncated)</div>
+												&lt;ul&gt;
+																										&lt;li class=&quot;language_top_2 top_menu_top menu_with_child&quot;&gt;&lt;i class=&quot;fas fa-globe fw-18&quot;&gt;&lt;/i&gt;&amp;nbsp;Language														&lt;ul class=&quot;language_dropdown dropdown_wrap&quot;&gt;
+															&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com&quot;&gt;ENG&lt;/a&gt;&lt;/li&gt;
+															&lt;li&gt;&lt;a href=&quot;https://my.busonlineticket.com&quot;&gt;MLY&lt;/a&gt;&lt;/li&gt;
+															&lt;li&gt;&lt;a href=&quot;https://cn.busonlineticket.com&quot;&gt;中文&lt;/a&gt;&lt;/li&gt;
+														&lt;/ul&gt;
+													&lt;/li&gt;
+													&lt;li class=&quot;currency_top currency_desktop top_menu_top menu_with_child&quot;&gt;&lt;span&gt;CURRENCY&lt;/span&gt;
+														&lt;ul class=&quot;currency_dropdown dropdown_wrap&quot;&gt;
+															&lt;li&gt;&lt;a class=&quot;myr_button&quot; onclick=&quot;changeMYRcurrency()&quot;&gt;Malaysia Ringgit (RM)&lt;/a&gt;&lt;/li&gt;
+															&lt;li&gt;&lt;a class=&quot;sgd_button&quot; onclick=&quot;changeSGDcurrency()&quot;&gt;Singapore Dollar (S$)&lt;/a&gt;&lt;/li&gt;
+                                                            &lt;li&gt;&lt;a class=&quot;ind_button&quot; onclick=&quot;changeIDRcurrency()&quot;&gt;Indonesia Rupiah (Rp)&lt;/a&gt;&lt;/li&gt;
+														&lt;/ul&gt;
+													&lt;/li&gt;
+													&lt;li class=&quot;hidden-xs top_menu_top&quot; id=&quot;liCheckBooking&quot;&gt;&lt;/li&gt;
+													&lt;li class=&quot;hidden-xs top_menu_top user_top&quot; id=&quot;liLogin&quot;&gt;&lt;/li&gt;
+													&lt;li class=&quot;hidden-xs top_menu_top hidden logedin_desktop&quot; id=&quot;liLogedIn&quot;&gt;&lt;/li&gt;
+												&lt;/ul&gt;
+											&lt;/div&gt;
+										&lt;/div&gt;
+									&lt;/div&gt;
+									&lt;div class=&quot;dekstop-menu&quot;&gt;
+										&lt;nav id=&quot;nav&quot; role=&quot;navigation&quot; class=&quot;right main_nav_class&quot;&gt;
+											&lt;!-- Collect the nav links for toggling --&gt;
+											&lt;div class=&quot;collapse navbar-collapse navbar-ex1-collapse&quot;&gt;&lt;ul id=&quot;menu-main-menu&quot; class=&quot;nav navbar-nav all_lang&quot;&gt;&lt;li id=&quot;menu-item-12&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-12&quot;&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;menu-item-10909&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-10909&quot;&gt;&lt;a href=&quot;https://www2.busonlineticket.com/booking/bus-tickets.aspx&quot;&gt;Bus Tickets&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;menu-item-53808&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-53808&quot;&gt;&lt;a href=&quot;https://www2.busonlineticket.com/booking/bus-and-hotel.aspx&quot;&gt;Bus + Hotel&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;menu-item-10911&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-10911&quot;&gt;&lt;a href=&quot;https://www2.busonlineticket.com/booking/ferry-tickets.aspx&quot;&gt;Ferry Tickets&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;menu-item-10910&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-10910&quot;&gt;&lt;a href=&quot;https://www2.busonlineticket.com/booking/train-tickets.aspx&quot;&gt;Train Tickets&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;menu-item-46851&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-46851&quot;&gt;&lt;a href=&quot;https://www.klook.com/en-SG/?aid=2941&amp;#038;utm_medium=affiliate-alwayson&amp;#038;utm_source=non-network&amp;#038;utm_campaign=2941&amp;#038;utm_term=&amp;#038;utm_content=&quot;&gt;Tours &amp;#038; Attractions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;										&lt;/nav&gt;
+									&lt;/div&gt;
+                            	&lt;/div&gt;
+                        	&lt;/div&gt;
+                    	&lt;/div&gt;
+                	&lt;/div&gt;
+					&lt;div class=&quot;main_menu_wrap&quot;&gt;
+						&lt;div class=&quot;container&quot;&gt;&lt;/div&gt;
+					&lt;/div&gt;&lt;!-- End .main_menu_wrap--&gt;
+            	&lt;/header&gt;
+        	&lt;/div&gt;
+			&lt;div id=&quot;open-login&quot; class=&quot;modal&quot; tabindex=&quot;-1&quot; role=&quot;dialog&quot;&gt;&lt;/div&gt;
+    	&lt;/div&gt;
+		&lt;div class=&quot;pg-content&quot;&gt;
+	&lt;div class=&quot;container&quot;&gt;
+		&lt;div class=&quot;text-center&quot;&gt;
+			&lt;img src=&quot;https://www2.busonlineticket.com/wp-content/themes/BOT/images/404.jpg&quot; class=&quot;img-responsive center-block&quot; /&gt;
+			&lt;div style=&quot;padding:8px 0px;&quot;&gt;
+				&lt;div style=&quot;color:#7a8488;font-size:24px;font-weight:bold;&quot;&gt;We&#x27;re sorry,&lt;/div&gt;
+				&lt;div style=&quot;color:#009cdd;font-size:20px;font-weight:bold;&quot;&gt;but the page you were looking for didn&#x27;t reflect any result.&lt;/div&gt;
+				&lt;div&gt;&lt;p style=&quot;color:#444444;font-size:16px;&quot;&gt;Come and check out our highlights below instead:&lt;/p&gt;&lt;/div&gt;
+				&lt;br /&gt;
+				&lt;div&gt;
+					&lt;ul class=&quot;hr-menu&quot;&gt;
+						&lt;li&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/promotions&quot;&gt;Latest Promotion&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/bus-operators&quot;&gt;Bus Operators&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/loyalty-program&quot;&gt;Loyalty Program&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/mobile-apps&quot;&gt;Mobile Apps&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/how-to-book&quot;&gt;How to Book&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/faq&quot;&gt;FAQ&lt;/a&gt;&lt;/li&gt;
+					&lt;/ul&gt;
+				&lt;/div&gt;
+				&lt;br /&gt;
+				&lt;br /&gt;
+				&lt;br /&gt;
+				&lt;br /&gt;
+				&lt;br /&gt;
+				&lt;br /&gt;
+				&lt;style type=&quot;text/css&quot;&gt;
+					.hr-menu{list-style:none;}
+					.hr-menu li{display: inline;}
+					.hr-menu li a{background:#000;padding:5px 10px;border-radius:3px;margin-right:5px;color:#fff;font-family:Tahoma;font-size:15px;display: table-cell;border:1px solid white}
+					.hr-menu li a:hover{text-decoration:none;background:#009cdd;&quot;}
+				&lt;/style&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;	
+	&lt;/div&gt;
+&lt;/div&gt;
+ ﻿&lt;div id=&quot;sociallist&quot; class=&quot;hidden-xs&quot; align=&quot;center&quot;&gt;
+&lt;b&gt;We Accept :&lt;/b&gt;
+	&lt;img alt=&quot;Visa&quot; title=&quot;Visa&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-visa.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Mastercard&quot; title=&quot;Mastercard&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-mcard.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;eNETS&quot; title=&quot;eNETS&quot; src=&quot;https://www.busonlineticket.com/booking/images/enets.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Amex&quot; title=&quot;Amex&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-amex.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Diners&quot; title=&quot;Diners&quot; src=&quot;https://www.busonlineticket.com/booking/images/diners.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Discover&quot; title=&quot;Discover&quot; src=&quot;https://www.busonlineticket.com/booking/images/discover.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;PayPal&quot; title=&quot;PayPal&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-paypal.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;DBS Paylah&quot; title=&quot;DBS Paylah&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-dbs_paylah.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;AXS&quot; title=&quot;AXS&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-axs.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Maybank2u&quot; title=&quot;Maybank2u&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-maybank2u.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Cimb&quot; title=&quot;Cimb&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-cimb.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Hong Leong Bank&quot; title=&quot;Hong Leong Bank&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-hlb.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;RHB&quot; title=&quot;RHB&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-rhb.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+
+	&lt;img alt=&quot;TNG EWallet&quot; title=&quot;TNG EWallet&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-tng.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Boost&quot; title=&quot;Boost&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-boost.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;GrabPay&quot; title=&quot;GrabPay&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-grabpay.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;UnionPay&quot; title=&quot;UnionPay&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-unionpay.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;AliPay&quot; title=&quot;AliPay&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-alipay.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+&lt;/div&gt;
+	&lt;footer id=&quot;main-footer&quot;&gt;
+		&lt;div class=&quot;container hidden-xs check_footer&quot;&gt;
+			&lt;div class=&quot;row&quot;&gt;
+				&lt;div class=&quot;col-md-2&quot;&gt;
+					&lt;div class=&quot;widget-heading&quot;&gt;Information&lt;/div&gt;
+					&lt;ul class=&quot;widget-list&quot;&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/about-us&quot;&gt;About Us&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/bus-operators&quot;&gt;Bus Operators&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/bus-terminal&quot;&gt;Bus Terminal&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/bus-route&quot;&gt;Bus Route&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/train-route&quot;&gt;Train Route&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/ferry-route&quot;&gt;Ferry Route&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/promotions&quot;&gt;Latest Promotion&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/loyalty-program&quot;&gt;Loyalty Program&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/busonlineticket-affiliates-program&quot;&gt;Affiliate Program&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/booking/agent-registration.aspx&quot;&gt;Agent Registration&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/travel-tips&quot;&gt;Travel Tips&lt;/a&gt;&lt;/li&gt;											
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/destinations&quot;&gt;Destinations&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/contact-us&quot;&gt;Contact Us&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/site-map&quot;&gt;Sitemap&lt;/a&gt;&lt;/li&gt;	
+					&lt;/ul&gt;					
+				&lt;/div&gt;
+				&lt;div class=&quot;col-md-2&quot;&gt;
+					&lt;div class=&quot;widget-heading&quot;&gt;Our Offers&lt;/div&gt;
+					&lt;ul class=&quot;widget-list&quot;&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/booking/bus-tickets.aspx&quot;&gt;Bus Tickets&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/booking/train-tickets.aspx&quot;&gt;Train Tickets&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/booking/ferry-tickets.aspx&quot;&gt;Ferry Tickets&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.klook.com/en-SG/?aid=2941&amp;utm_medium=affiliate-alwayson&amp;utm_source=non-network&amp;utm_campaign=2941&amp;utm_term=&amp;utm_content=&quot;&gt;Tours &amp; Attractions&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/bus-chartering-service&quot;&gt;Bus Charter&lt;/a&gt;&lt;/li&gt;
+					&lt;/ul&gt;
+					&lt;div class=&quot;widget-heading&quot; style=&quot;margin-top:20px;&quot;&gt;Global&lt;/div&gt;
+					&lt;ul class=&quot;widget-list&quot;&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.co.th&quot;&gt;Thailand Booking Site&lt;/a&gt;&lt;/li&gt;
+					&lt;/ul&gt;					
+				&lt;/div&gt;
+				&lt;div class=&quot;col-md-2&quot;&gt;
+					&lt;div class=&quot;widget-heading&quot;&gt;Bookings Guide&lt;/div&gt;
+					&lt;ul class=&quot;widget-list&quot;&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/faq&quot;&gt;Booking FAQ&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/how-to-book&quot;&gt;How to Book&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/trip-duration&quot;&gt;Trip Duration&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/manage-my-booking&quot;&gt;Manage My Booking&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/bot-miles-redemption-guide&quot;&gt;BOT Miles Guide&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/payment-guide&quot;&gt;Payment Guide&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/plus-user-guide&quot;&gt;NTUC Plus! Guide&lt;/a&gt;&lt;/li&gt;				
+					&lt;/ul&gt;				
+				&lt;/div&gt;
+				&lt;div class=&quot;col-md-3&quot;&gt;
+					&lt;ul class=&quot;widget-list2&quot;&gt;
+						&lt;li class=&quot;find&quot;&gt;
+							&lt;div class=&quot;widget-heading&quot;&gt;Find Us&lt;/div&gt;
+							&lt;img alt=&quot;Singapore&quot; title=&quot;Singapore&quot; src=&quot;https://www.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/sg.png&quot;&gt;&amp;nbsp;&lt;strong&gt;Singapore&lt;/strong&gt;&lt;br /&gt;
+							JustCo, 5One Central,&lt;br&gt;
+							51 Bras Basah Rd, #05-01&lt;br&gt;
+							Singapore 189554&lt;br&gt;&lt;br&gt;
+							&lt;img alt=&quot;Malaysia&quot; title=&quot;Malaysia&quot; src=&quot;https://www.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/ms.png&quot;&gt;&amp;nbsp;&lt;strong&gt;Malaysia&lt;/strong&gt;&lt;br /&gt;
+							&lt;p&gt;VO3-11-19, Designer Office (VO3),&lt;br&gt;
+							Lingkaran SV, Sunway Velocity,&lt;br&gt;
+							55100 Kuala Lumpur&lt;/p&gt;&lt;/li&gt;
+					&lt;/ul&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;col-md-3&quot;&gt;
+					&lt;img src=&quot;https://www.busonlineticket.com/wp-content/themes/BOT/images/logo.png&quot; alt=&quot;&quot; /&gt;
+					&lt;ul class=&quot;social&quot;&gt;
+						&lt;li class=&quot;facebook&quot;&gt;&lt;a title=&quot;Be a fan&quot; href=&quot;https://www.facebook.com/busonlineticket&quot; target=&quot;_blank&quot;&gt;&lt;i style=&quot;padding-top: 6px&quot; class=&quot;fab fa-facebook-f&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+						&lt;li class=&quot;twitter&quot;&gt;&lt;a title=&quot;Follow us!&quot; href=&quot;https://twitter.com/busonlineticket&quot; target=&quot;_blank&quot;&gt;&lt;i style=&quot;padding-top: 6px&quot; class=&quot;fab fa-twitter&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+						&lt;li class=&quot;youtube&quot;&gt;&lt;a title=&quot;Subscribe to us!&quot; href=&quot;https://www.youtube.com/channel/UCIEbr7BpN0afTSjwWcR2ssg&quot; target=&quot;_blank&quot;&gt;&lt;i style=&quot;padding-top: 6px&quot; class=&quot;fab fa-youtube&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+						&lt;li class=&quot;facebook&quot;&gt;&lt;a title=&quot;Follow us!&quot; href=&quot;https://www.instagram.com/busonlineticket/&quot; target=&quot;_blank&quot;&gt;&lt;i style=&quot;padding-top: 6px&quot; class=&quot;fab fa-instagram&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+
+					&lt;/ul&gt;					
+				&lt;/div&gt;
+				&lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;footer_bg&quot;&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;copyright&quot;&gt;
+		&lt;div class=&quot;hidden-lg hidden-md hidden-sm&quot;&gt;
+		&lt;a href=&quot;https://www.busonlineticket.com/booking/check-booking.aspx&quot;&gt;&lt;u&gt;Check My Booking&lt;/u&gt;&lt;/a&gt; | &lt;a href=&quot;https://www.busonlineticket.com/site-map&quot;&gt;&lt;u&gt;Sitemap&lt;/u&gt;&lt;/a&gt; | &lt;a href=&quot;https://www.busonlineticket.co.th&quot;&gt;&lt;u&gt;Thailand Booking Site&lt;/u&gt;&lt;/a&gt;&lt;br&gt;&lt;br&gt;
+			&lt;ul class=&quot;msocial&quot;&gt;
+				&lt;li class=&quot;facebook&quot;&gt;&lt;a title=&quot;Be a fan&quot; href=&quot;https://www.facebook.com/busonlineticket&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fab fa-facebook-f&quot; style=&quot;border: 0px !important;padding-top: 4px;&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+				&lt;li class=&quot;twitter&quot;&gt;&lt;a title=&quot;Follow us!&quot; href=&quot;https://twitter.com/busonlineticket&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fab fa-twitter&quot; style=&quot;border: 0px !important;padding-top: 4px;&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+				&lt;li class=&quot;youtube&quot;&gt;&lt;a title=&quot;Subscribe to us!&quot; href=&quot;https://www.youtube.com/channel/UCIEbr7BpN0afTSjwWcR2ssg&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fab fa-youtube&quot; style=&quot;border: 0px !important;padding-top: 3px;&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+				&lt;li class=&quot;facebook&quot;&gt;&lt;a title=&quot;Follow us!&quot; href=&quot;https://www.instagram.com/busonlineticket/&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fab fa-instagram&quot; style=&quot;border: 0px !important;padding-top: 3px;&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+			&lt;/ul&gt;&lt;br&gt;
+		&lt;/div&gt;
+
+			Copyright © 2016 - 2030 by &lt;a href=&quot;https://www.busonlineticket.com&quot;&gt;BusOnlineTicket.com&lt;/a&gt;&lt;br&gt; &lt;a href=&quot;https://www.busonlineticket.com/privacy-policy&quot;&gt;&lt;u&gt;Privacy Policy&lt;/u&gt;&lt;/a&gt; | All Rights Reserved
+		&lt;/div&gt;
+	&lt;/footer&gt;
+&lt;script type=&quot;speculationrules&quot;&gt;
+{&quot;prefetch&quot;:[{&quot;source&quot;:&quot;document&quot;,&quot;where&quot;:{&quot;and&quot;:[{&quot;href_matches&quot;:&quot;/*&quot;},{&quot;not&quot;:{&quot;href_matches&quot;:[&quot;/wp-*.php&quot;,&quot;/wp-admin/*&quot;,&quot;/wp-content/uploads/*&quot;,&quot;/wp-content/*&quot;,&quot;/wp-content/plugins/*&quot;,&quot;/wp-content/themes/BOT/*&quot;,&quot;/*\\?(.+)&quot;]}},{&quot;not&quot;:{&quot;selector_matches&quot;:&quot;a[rel~=\&quot;nofollow\&quot;]&quot;}},{&quot;not&quot;:{&quot;selector_matches&quot;:&quot;.no-prefetch, .no-prefetch a&quot;}}]},&quot;eagerness&quot;:&quot;conservative&quot;}]}
+&lt;/script&gt;
+    &lt;script src=&quot;https://www.busonlineticket.com/booking/js/jquery-ui-1.10.4.min.js&quot;&gt;&lt;/script&gt;
+    &lt;span id=&quot;top-link-block&quot; class=&quot;hidden&quot;&gt;
+        &lt;a href=&quot;javascript:void(0)&quot; class=&quot;well well-sm&quot; onclick=&quot;jq(&#x27;html,body&#x27;).animate({scrollTop:0},&#x27;slow&#x27;);&quot;&gt;
+            &lt;i class=&quot;fa fa-chevron-up&quot;&gt;&lt;/i&gt;&lt;span class=&quot;hidden-xs&quot;&gt;&lt;/span&gt;
+        &lt;/a&gt;
+    &lt;/span&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+/* &lt;![CDATA[ */
+var google_conversion_id = 954818278;
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]&gt; */
+&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;//www.googleadservices.com/pagead/conversion.js&quot;&gt;
+&lt;/script&gt;
+&lt;noscript&gt;
+&lt;div style=&quot;display:inline;&quot;&gt;
+&lt;img height=&quot;1&quot; width=&quot;1&quot; style=&quot;border-style:none;&quot; alt=&quot;&quot; src=&quot;//googleads.g.doubleclick.net/pagead/viewthroughconversion/954818278/?guid=ON&amp;amp;script=0&quot;/&gt;
+&lt;/div&gt;
+&lt;/noscript&gt;
+    &lt;div id=&quot;divLoading&quot;&gt;
+        &lt;img id=&quot;pleaseWait&quot; src=&quot;https://www.busonlineticket.com/booking/images/loading.gif&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;ui-widget-overlay ui-front&quot; style=&quot;display: none;&quot; id=&quot;divOverlay&quot; runat=&quot;server&quot;&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;	</div>
     
 <p class="section-label">Failure Reason</p>
-<div class="error-box">(&#x27;C:\\Users\\LEE CHUN YIN\\Desktop\\bot_qa\\tests\\api\\test_api_signup.py&#x27;, 120, &quot;Skipped: Signup endpoint returned 404 — &#x27;/index.aspx/UserRegister&#x27; may have changed. Open the site in DevTools → Network tab, attempt a manual signup, then copy the correct path into API_SIGNUP_ENDPOINT in test_api_signup.py.&quot;)</div>
+<div class="error-box">(&#x27;C:\\Users\\LEE CHUN YIN\\source\\repos\\busonlineticket-qa-automation\\tests\\api\\test_api_signup.py&#x27;, 130, &quot;Skipped: Signup endpoint returned 404 — &#x27;/index.aspx/UserRegister&#x27; may have changed. Open the site in DevTools → Network tab, attempt a manual signup, then copy the correct path into API_SIGNUP_ENDPOINT in test_api_signup.py.&quot;)</div>
   </div>
 </div>
-<div class="card" data-status="fail">
+<div class="card" data-status="fail" data-name="test_signup_duplicate_phone_rejected" data-tcid="tc-api-04">
   <div class="card-header">
     <span class="status-dot fail"></span>
     <div>
       <div class="tc-id">TC-API-04</div>
       <div class="tc-name">✘ test_signup_duplicate_phone_rejected</div>
     </div>
-    <span class="tc-dur">3.92s</span>
+    <span class="tc-dur">3.11s</span>
     <span class="chevron">▶</span>
   </div>
   <div class="card-body">
     <p class="section-label">Request</p>
-    <div class="http-block"><span class="method">POST</span>  <span class="url">https://www2.busonlineticket.com/index.aspx/UserRegister</span>
+    <div class="http-block"><span class="http-method">POST</span>  <span class="http-url">https://www2.busonlineticket.com/index.aspx/UserRegister</span>
 
-<span class="key">phone</span><span class="step-dim"> : </span><span class="val">163553613</span>
-<span class="key">password</span><span class="step-dim"> : </span><span class="val">••••••••</span>
-<span class="key">confirmPassword</span><span class="step-dim"> : </span><span class="val">••••••••</span>
-<span class="key">countryCode</span><span class="step-dim"> : </span><span class="val">60</span></div>
+<span class="j-punct">{</span>
+  <span class="j-key">&quot;phone&quot;</span> <span class="j-str">&quot;163553613&quot;</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;password&quot;</span> <span class="http-masked">"••••••••"</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;confirmPassword&quot;</span> <span class="http-masked">"••••••••"</span><span class="j-punct">,</span>
+  <span class="j-key">&quot;countryCode&quot;</span> <span class="j-str">&quot;60&quot;</span>
+<span class="j-punct">}</span></div>
     <p class="section-label">Response</p>
-    <div class="http-block"><span class="status-err">HTTP 404</span>
+    <div class="http-block"><span class="http-status-err">HTTP 404</span>
 
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en-US&quot;&gt;
@@ -370,31 +781,412 @@ E   Failed: Login API rejected credentials (status=0): Invalid login credentials
     &lt;link rel=&quot;pingback&quot; href=&quot;https://www2.busonlineticket.com/xmlrpc.php&quot;&gt;
 	&lt;link rel=&quot;shortcut icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://cdn.busonlineticket.com/image/favicon2.png&quot; /&gt;	
     &lt;meta name=&#x27;robots&#x27; content=&#x27;noindex, follow&#x27; /&gt;
+
+	&lt;!-- This site is optimized with the Yoast SEO plugin v27.1.1 - https://yoast.com/product/yoast-seo-wordpress/ --&gt;
+	&lt;title&gt;Page Not Found | BusOnlineTicket.com&lt;/title&gt;
+	&lt;meta property=&quot;og:locale&quot; content=&quot;en_US&quot; /&gt;
+	&lt;meta property=&quot;og:title&quot; content=&quot;Page Not Found | BusOnlineTicket.com&quot; /&gt;
+	&lt;meta property=&quot;og:site_name&quot; content=&quot;BusOnlineTicket.com&quot; /&gt;
+	&lt;script type=&quot;application/ld+json&quot; class=&quot;yoast-schema-graph&quot;&gt;{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@graph&quot;:[{&quot;@type&quot;:&quot;WebSite&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#website&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;name&quot;:&quot;BusOnlineTicket.com&quot;,&quot;description&quot;:&quot;Book Online Bus Tickets in Singapore and Malaysia&quot;,&quot;publisher&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;},&quot;potentialAction&quot;:[{&quot;@type&quot;:&quot;SearchAction&quot;,&quot;target&quot;:{&quot;@type&quot;:&quot;EntryPoint&quot;,&quot;urlTemplate&quot;:&quot;https://www2.busonlineticket.com/?s={search_term_string}&quot;},&quot;query-input&quot;:{&quot;@type&quot;:&quot;PropertyValueSpecification&quot;,&quot;valueRequired&quot;:true,&quot;valueName&quot;:&quot;search_term_string&quot;}}],&quot;inLanguage&quot;:&quot;en-US&quot;},{&quot;@type&quot;:&quot;Organization&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;,&quot;name&quot;:&quot;BusOnlineTicket Pte Ltd&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;inLanguage&quot;:&quot;en-US&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;contentUrl&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;width&quot;:300,&quot;height&quot;:132,&quot;caption&quot;:&quot;BusOnlineTicket Pte Ltd&quot;},&quot;image&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;},&quot;sameAs&quot;:[&quot;https://www.facebook.com/busonlineticket&quot;,&quot;https://x.com/busonlineticket&quot;,&quot;https://www.instagram.com/busonlineticket/&quot;]}]}&lt;/script&gt;
+	&lt;!-- / Yoast SEO plugin. --&gt;
+
+
+&lt;link rel=&#x27;dns-prefetch&#x27; href=&#x27;//cdn.busonlineticket.com&#x27; /&gt;
+&lt;style id=&#x27;wp-img-auto-sizes-contain-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
+img:is([sizes=auto i],[sizes^=&quot;auto,&quot; i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+&lt;/style&gt;
+&lt;link rel=&#x27;stylesheet&#x27; id=&#x27;wp-block-library-css&#x27; href=&#x27;https://www2.busonlineticket.com/wp-includes/css/dist/block-library/style.min.css?ver=6.9.4&#x27; type=&#x27;text/css&#x27; media=&#x27;all&#x27; /&gt;
+&lt;style id=&#x27;wp-block-library-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
+/*wp_block_styles_on_demand_placeholder:6a2fae2e591d8*/
+/*# sourceURL=wp-block-library-inline-css */
+&lt;/style&gt;
+&lt;style id=&#x27;classic-theme-styles-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+&lt;/style&gt;
+&lt;link rel=&#x27;stylesheet&#x27; id=&#x27;wpml-legacy-dropdown-click-0-css&#x27; href=&#x27;https://www2.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/templates/language-switchers/legacy-dropdown-click/style.min.css?ver=1&#x27; type=&#x27;text/css&#x27; media=&#x27;all&#x27; /&gt;
+&lt;style id=&#x27;wpml-legacy-dropdown-click-0-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
+.wpml-ls-statics-shortcode_actions{background-color:#ffffff;}.wpml-ls-statics-shortcode_actions, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu, .wpml-ls-statics-shortcode_actions a {border-color:#cdcdcd;}.wpml-ls-statics-shortcode_actions a, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a:link, .wpml-ls-statics-shortcode_actions li:not(.wpml-ls-current-language) .wpml-ls-link, .wpml-ls-statics-shortcode_actions li:not(.wpml-ls-current-language) .wpml-ls-link:link {color:#444444;background-color:#ffffff;}.wpml-ls-statics-shortcode_actions a, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a:hover,.wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a:focus, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a:link:hover, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu a:link:focus {color:#000000;background-color:#eeeeee;}.wpml-ls-statics-shortcode_actions .wpml-ls-current-language &gt; a {color:#444444;background-color:#ffffff;}.wpml-ls-statics-shortcode_actions .wpml-ls-current-language:hover&gt;a, .wpml-ls-statics-shortcode_actions .wpml-ls-current-language&gt;a:focus {color:#000000;background-color:#eeeeee;}
+.lang_sel_sel{width:100px;padding:5px 10px !important;border:0px !important;} #lang_sel_click ul ul{top:30px !important;}
+/*# sourceURL=wpml-legacy-dropdown-click-0-inline-css */
+&lt;/style&gt;
+&lt;link rel=&#x27;stylesheet&#x27; id=&#x27;BOT-css&#x27; href=&#x27;https://www2.busonlineticket.com/css/style_min.css?ver=20251129&#x27; type=&#x27;text/css&#x27; media=&#x27;all&#x27; /&gt;
+&lt;link rel=&#x27;stylesheet&#x27; id=&#x27;bootstrap-css&#x27; href=&#x27;https://cdn.busonlineticket.com/css/bootstrap.min.css?ver=3.3.6&#x27; type=&#x27;text/css&#x27; media=&#x27;all&#x27; /&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://www2.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/templates/language-switchers/legacy-dropdown-click/script.min.js?ver=1&quot; id=&quot;wpml-legacy-dropdown-click-0-js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;https://api.w.org/&quot; href=&quot;https://www2.busonlineticket.com/wp-json/&quot; /&gt;&lt;link rel=&quot;EditURI&quot; type=&quot;application/rsd+xml&quot; title=&quot;RSD&quot; href=&quot;https://www2.busonlineticket.com/xmlrpc.php?rsd&quot; /&gt;
+&lt;meta name=&quot;generator&quot; content=&quot;WordPress 6.9.4&quot; /&gt;
+&lt;meta name=&quot;generator&quot; content=&quot;WPML ver:4.6.4 stt:61,1,64;&quot; /&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+jQuery(document).ready(function (){
+	var userAgent = navigator.userAgent;
+	if (userAgent == &quot;appsite&quot;) {
+		jQuery(&quot;.content .btn&quot;).hide();
+		jQuery(&quot;.content .book-now&quot;).hide();
+		jQuery(&quot;.pwp-bus&quot;).hide();
+		jQuery(&quot;#breadcrumbs&quot;).hide();
+		jQuery(&quot;a&quot;).css(&#x27;color&#x27;, &#x27;#000&#x27;);
+		jQuery(&quot;a span&quot;).css(&#x27;color&#x27;, &#x27;#000&#x27;);
+		jQuery(&quot;a&quot;).click(function(e) {
+			e.preventDefault();
+		});
+	}
+});
+&lt;/script&gt;	&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.min.js&quot;&gt;&lt;/script&gt;
+   &lt;script src=&quot;https://cdn.busonlineticket.com/js/all_route.js?v=26262626JunJun1515&quot;&gt;&lt;/script&gt;  		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.busonlineticket.com/fonts/fontawesome/css/all.min.css?ver=6.1.0&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/mainv2.css?ver=26260615&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/sitev2.css?ver=26260615&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/style_min.css?ver=26260615&quot; /&gt;
+		&lt;!--&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/global_style_homepagev2.css?ver=26260615&quot; /&gt;--&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.busonlineticket.com/css/jquery.smartbanner.css&quot; /&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/slick.min.js?v=26260615&quot;&gt;&lt;/script&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://www2.busonlineticket.com/js/custom_main.js?v=26260615&quot;&gt;&lt;/script&gt;	
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.dotdotdot.js?v=26260615&quot;&gt;&lt;/script&gt;	
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/isotope.pkgd.min.js?v=26260615&quot;&gt;&lt;/script&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.smartbanner.js?ver=26260615&quot;&gt;&lt;/script&gt;
 
-	&lt;!-- This site is optimized with the Yoast SEO plugin v27.1.1 - https://yoast.com/product/yoast-seo-wordpress/ --&gt;
-	&lt;title&gt;Page Not Found | BusOnlineTicket.com&lt;/title&gt;
-	&lt;meta property=&quot;og:locale&quot; content=&quot;en_US&quot; /&gt;
-	&lt;meta property=&quot;og:title&quot; content=&quot;Page Not Found | BusOnlineTicket.com&quot; /&gt;
-	&lt;meta property=&quot;og:site_name&quot; content=&quot;BusOnlineTicket.com&quot; /&gt;
-	&lt;script type=&quot;application/ld+json&quot; class=&quot;yoast-schema-graph&quot;&gt;{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@graph&quot;:[{&quot;@type&quot;:&quot;WebSite&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#website&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;name&quot;:&quot;BusOnlineTicket.com&quot;,&quot;description&quot;:&quot;Book Online Bus Tickets in Singapore and Malaysia&quot;,&quot;publisher&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;},&quot;potentialAction&quot;:[{&quot;@type&quot;:&quot;SearchAction&quot;,&quot;target&quot;:{&quot;@type&quot;:&quot;EntryPoint&quot;,&quot;urlTemplate&quot;:&quot;https://www2.busonlineticket.com/?s={search_term_string}&quot;},&quot;query-input&quot;:{&quot;@type&quot;:&quot;PropertyValueSpecification&quot;,&quot;valueRequired&quot;:true,&quot;valueName&quot;:&quot;search_term_string&quot;}}],&quot;inLanguage&quot;:&quot;en-US&quot;},{&quot;@type&quot;:&quot;Organization&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#organization&quot;,&quot;name&quot;:&quot;BusOnlineTicket Pte Ltd&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/&quot;,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;inLanguage&quot;:&quot;en-US&quot;,&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;,&quot;url&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;contentUrl&quot;:&quot;https://www2.busonlineticket.com/wp-content/uploads/2016/06/BusOnlineTicket-Logo.jpg&quot;,&quot;width&quot;:300,&quot;height&quot;:132,&quot;caption&quot;:&quot;BusOnlineTicket Pte Ltd&quot;},&quot;image&quot;:{&quot;@id&quot;:&quot;https://www2.busonlineticket.com/#/schema/logo/image/&quot;},&quot;sameAs&quot;:[&quot;https://www.facebook.com/busonlineticket&quot;,&quot;https://x.com/busonlineticket&quot;,&quot;https://www.instagram.com/busonlineticket/&quot;]}]}&lt;/script&gt;
-	&lt;!-- / Yoast SEO plugin. --&gt;
+&lt;script&gt;
+  var jq = jQuery.noConflict();
+	jq(document).ready(function () {
+		jq(&#x27;.logedin_desktop&#x27;).click(function(){
+			console.log(&#x27;clicked logout&#x27;);
+			jq(this).addClass(&#x27;hidden&#x27;);
+			jq(&#x27;.recent-search-wrapper .btn-cloneSubmit&#x27;).prop(&quot;disabled&quot;, false);
+		});
+	});
+	jq(function() { jq.smartbanner({title: &quot;BusOnlineTicket.com&quot;,icon:&quot;https://play-lh.googleusercontent.com/k2GhFBP3LX4OYODDwP01mR_lVkJVvrLqn_EwbHA0otGR18Za_bH4ud1yBBpZanu0FPo4=w240-h480-rw&quot; }) } )
+	&lt;/script&gt;
+&lt;/head&gt;
+&lt;body class=&quot;error404 wp-theme-BOT metaslider-plugin&quot;&gt;
+		 
+		&lt;!-- Google Tag Manager (noscript) --&gt;
+		&lt;noscript&gt;&lt;iframe src=&quot;https://www.googletagmanager.com/ns.html?id=GTM-KMMF3SV&quot;
+		height=&quot;0&quot; width=&quot;0&quot; style=&quot;display:none;visibility:hidden&quot;&gt;&lt;/iframe&gt;&lt;/noscript&gt;
+		&lt;!-- End Google Tag Manager (noscript) --&gt;
+    			&lt;div class=&quot;global-wrap header-wrap container-fluid&quot;&gt;
+        	&lt;div class=&quot;row&quot;&gt;
+            	&lt;header id=&quot;main-header&quot; style=&quot;&quot;&gt;
+					&lt;div class=&quot;header-top &quot;&gt;
+						&lt;div class=&quot;header_container&quot;&gt;
+							&lt;div class=&quot;header_row&quot;&gt;
+								&lt;div class=&quot;header_logo_wrap&quot;&gt;
+									&lt;a class=&quot;logo-responsive&quot; href=&quot;https://www2.busonlineticket.com/&quot; &gt;
+																					&lt;div class=&quot;logo-pc hidden-xs&quot;&gt;&lt;img src=&quot;https://cdn.busonlineticket.com/images/2022/05/Logo-01.png&quot; alt=&quot;BusOnlineTicket.com&quot; title=&quot;BusOnlineTicket.com&quot; style=&quot;padding:15px 0px;&quot; class=&quot;hidden-xs img-responsive&quot;  /&gt;&lt;/div&gt;
+											
+										                                	&lt;/a&gt;
+									&lt;div class=&quot;mobile_menu_trigger&quot;&gt;
+									&lt;div class=&quot;logo-mb hidden-sm hidden-md hidden-lg&quot;&gt;&lt;a href=&quot;https://www2.busonlineticket.com&quot;&gt;&lt;img src=&quot;https://cdn.busonlineticket.com/images/2022/05/Logo-01.png&quot; style=&quot;width: 90%;padding:20px 0px;&quot; alt=&quot;BusOnlineTicket.com&quot; title=&quot;BusOnlineTicket.com&quot; /&gt;&lt;/a&gt;&lt;/div&gt;
+										&lt;!-- Mobile display --&gt;
+										&lt;button id=&quot;open-nav&quot; type=&quot;button&quot; class=&quot;navbar-toggle topbar-btn&quot; data-target=&quot;.navbar-ex1-collapse&quot;&gt;
+											&lt;i class=&quot;far fa-bars&quot;&gt;&lt;/i&gt;
+										&lt;/button&gt;
+																			&lt;/div&gt;
+                            	&lt;/div&gt;
+                            	&lt;div class=&quot;header_menu_wrap&quot;&gt;
+									&lt;div id=&quot;mobile-new-menu&quot;&gt;&lt;/div&gt;
+									&lt;div class=&quot;header-top-login&quot;&gt;
+										&lt;div class=&quot;container&quot;&gt;
+											&lt;!--&lt;div class=&quot;col-md-3&quot;&gt;
+												&lt;ul class=&quot;list-inline&quot;&gt;
+													&lt;li style=&quot;margin-right:0px;&quot;&gt;&lt;a href=&quot;https://www.busonlineticket.com&quot; rel=&quot;nofollow&quot;&gt;&lt;img src=&quot;https://www.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/en.png&quot; alt=&quot;English Language&quot;&gt; ENG&lt;/a&gt;&lt;/li&gt;
+													&lt;li&gt;&lt;a href=&quot;https://my.busonlineticket.com&quot; rel=&quot;nofollow&quot;&gt;&lt;img src=&quot;https://www.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/ms.png&quot; alt=&quot;Malay Language&quot;&gt; MLY&lt;/a&gt;&lt;/li&gt;	
+													&lt;li&gt;&lt;a href=&quot;https://cn.busonlineticket.com&quot; rel=&quot;nofollow&quot;&gt;&lt;img src=&quot;https://www.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/cn.png&quot; alt=&quot;Chinese Language&quot;&gt; &amp;#20013;&amp;#25991;&lt;/a&gt;&lt;/li&gt;	
+												&lt;/ul&gt;
+											&lt;/div&gt;
+											&lt;div class=&quot;col-md-9&quot;&gt;
+												&lt;div class=&quot;pull-right&quot;&gt;
+													&lt;ul class=&quot;list-inline&quot;&gt;
+														&lt;li&gt;&lt;a id=&quot;emailBot&quot; href=&quot;mailto:sales@busonlineticket.com&quot;&gt;&lt;i class=&quot;fa fa-envelope&quot; style=&quot;font-size:104.545%;vertical-align: -.125em;&quot;&gt;&lt;/i&gt; sales@busonlineticket.com&lt;/a&gt;&lt;/li&gt;
+														&lt;li class=&quot;hidden-xs text-white&quot; id=&quot;liLogin&quot;&gt;&lt;/li&gt;
+														&lt;li class=&quot;hidden-xs text-white hidden&quot; id=&quot;liLogedIn&quot;&gt;&lt;/li&gt;
+														&lt;li class=&quot;hidden-xs text-white&quot; id=&quot;liCheckBooking&quot;&gt;&lt;/li&gt;
+													&lt;/ul&gt;
+												&lt;/div&gt;
+											&lt;/div&gt;--&gt;
+											&lt;div class=&quot;header_top_menu_wrap&quot;&gt;
 
-... (truncated)</div>
+												&lt;ul&gt;
+																										&lt;li class=&quot;language_top_2 top_menu_top menu_with_child&quot;&gt;&lt;i class=&quot;fas fa-globe fw-18&quot;&gt;&lt;/i&gt;&amp;nbsp;Language														&lt;ul class=&quot;language_dropdown dropdown_wrap&quot;&gt;
+															&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com&quot;&gt;ENG&lt;/a&gt;&lt;/li&gt;
+															&lt;li&gt;&lt;a href=&quot;https://my.busonlineticket.com&quot;&gt;MLY&lt;/a&gt;&lt;/li&gt;
+															&lt;li&gt;&lt;a href=&quot;https://cn.busonlineticket.com&quot;&gt;中文&lt;/a&gt;&lt;/li&gt;
+														&lt;/ul&gt;
+													&lt;/li&gt;
+													&lt;li class=&quot;currency_top currency_desktop top_menu_top menu_with_child&quot;&gt;&lt;span&gt;CURRENCY&lt;/span&gt;
+														&lt;ul class=&quot;currency_dropdown dropdown_wrap&quot;&gt;
+															&lt;li&gt;&lt;a class=&quot;myr_button&quot; onclick=&quot;changeMYRcurrency()&quot;&gt;Malaysia Ringgit (RM)&lt;/a&gt;&lt;/li&gt;
+															&lt;li&gt;&lt;a class=&quot;sgd_button&quot; onclick=&quot;changeSGDcurrency()&quot;&gt;Singapore Dollar (S$)&lt;/a&gt;&lt;/li&gt;
+                                                            &lt;li&gt;&lt;a class=&quot;ind_button&quot; onclick=&quot;changeIDRcurrency()&quot;&gt;Indonesia Rupiah (Rp)&lt;/a&gt;&lt;/li&gt;
+														&lt;/ul&gt;
+													&lt;/li&gt;
+													&lt;li class=&quot;hidden-xs top_menu_top&quot; id=&quot;liCheckBooking&quot;&gt;&lt;/li&gt;
+													&lt;li class=&quot;hidden-xs top_menu_top user_top&quot; id=&quot;liLogin&quot;&gt;&lt;/li&gt;
+													&lt;li class=&quot;hidden-xs top_menu_top hidden logedin_desktop&quot; id=&quot;liLogedIn&quot;&gt;&lt;/li&gt;
+												&lt;/ul&gt;
+											&lt;/div&gt;
+										&lt;/div&gt;
+									&lt;/div&gt;
+									&lt;div class=&quot;dekstop-menu&quot;&gt;
+										&lt;nav id=&quot;nav&quot; role=&quot;navigation&quot; class=&quot;right main_nav_class&quot;&gt;
+											&lt;!-- Collect the nav links for toggling --&gt;
+											&lt;div class=&quot;collapse navbar-collapse navbar-ex1-collapse&quot;&gt;&lt;ul id=&quot;menu-main-menu&quot; class=&quot;nav navbar-nav all_lang&quot;&gt;&lt;li id=&quot;menu-item-12&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-12&quot;&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;menu-item-10909&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-10909&quot;&gt;&lt;a href=&quot;https://www2.busonlineticket.com/booking/bus-tickets.aspx&quot;&gt;Bus Tickets&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;menu-item-53808&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-53808&quot;&gt;&lt;a href=&quot;https://www2.busonlineticket.com/booking/bus-and-hotel.aspx&quot;&gt;Bus + Hotel&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;menu-item-10911&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-10911&quot;&gt;&lt;a href=&quot;https://www2.busonlineticket.com/booking/ferry-tickets.aspx&quot;&gt;Ferry Tickets&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;menu-item-10910&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-10910&quot;&gt;&lt;a href=&quot;https://www2.busonlineticket.com/booking/train-tickets.aspx&quot;&gt;Train Tickets&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;menu-item-46851&quot; class=&quot;menu-item menu-item-type-custom menu-item-object-custom menu-item-46851&quot;&gt;&lt;a href=&quot;https://www.klook.com/en-SG/?aid=2941&amp;#038;utm_medium=affiliate-alwayson&amp;#038;utm_source=non-network&amp;#038;utm_campaign=2941&amp;#038;utm_term=&amp;#038;utm_content=&quot;&gt;Tours &amp;#038; Attractions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;										&lt;/nav&gt;
+									&lt;/div&gt;
+                            	&lt;/div&gt;
+                        	&lt;/div&gt;
+                    	&lt;/div&gt;
+                	&lt;/div&gt;
+					&lt;div class=&quot;main_menu_wrap&quot;&gt;
+						&lt;div class=&quot;container&quot;&gt;&lt;/div&gt;
+					&lt;/div&gt;&lt;!-- End .main_menu_wrap--&gt;
+            	&lt;/header&gt;
+        	&lt;/div&gt;
+			&lt;div id=&quot;open-login&quot; class=&quot;modal&quot; tabindex=&quot;-1&quot; role=&quot;dialog&quot;&gt;&lt;/div&gt;
+    	&lt;/div&gt;
+		&lt;div class=&quot;pg-content&quot;&gt;
+	&lt;div class=&quot;container&quot;&gt;
+		&lt;div class=&quot;text-center&quot;&gt;
+			&lt;img src=&quot;https://www2.busonlineticket.com/wp-content/themes/BOT/images/404.jpg&quot; class=&quot;img-responsive center-block&quot; /&gt;
+			&lt;div style=&quot;padding:8px 0px;&quot;&gt;
+				&lt;div style=&quot;color:#7a8488;font-size:24px;font-weight:bold;&quot;&gt;We&#x27;re sorry,&lt;/div&gt;
+				&lt;div style=&quot;color:#009cdd;font-size:20px;font-weight:bold;&quot;&gt;but the page you were looking for didn&#x27;t reflect any result.&lt;/div&gt;
+				&lt;div&gt;&lt;p style=&quot;color:#444444;font-size:16px;&quot;&gt;Come and check out our highlights below instead:&lt;/p&gt;&lt;/div&gt;
+				&lt;br /&gt;
+				&lt;div&gt;
+					&lt;ul class=&quot;hr-menu&quot;&gt;
+						&lt;li&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/promotions&quot;&gt;Latest Promotion&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/bus-operators&quot;&gt;Bus Operators&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/loyalty-program&quot;&gt;Loyalty Program&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/mobile-apps&quot;&gt;Mobile Apps&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/how-to-book&quot;&gt;How to Book&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;/faq&quot;&gt;FAQ&lt;/a&gt;&lt;/li&gt;
+					&lt;/ul&gt;
+				&lt;/div&gt;
+				&lt;br /&gt;
+				&lt;br /&gt;
+				&lt;br /&gt;
+				&lt;br /&gt;
+				&lt;br /&gt;
+				&lt;br /&gt;
+				&lt;style type=&quot;text/css&quot;&gt;
+					.hr-menu{list-style:none;}
+					.hr-menu li{display: inline;}
+					.hr-menu li a{background:#000;padding:5px 10px;border-radius:3px;margin-right:5px;color:#fff;font-family:Tahoma;font-size:15px;display: table-cell;border:1px solid white}
+					.hr-menu li a:hover{text-decoration:none;background:#009cdd;&quot;}
+				&lt;/style&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;	
+	&lt;/div&gt;
+&lt;/div&gt;
+ ﻿&lt;div id=&quot;sociallist&quot; class=&quot;hidden-xs&quot; align=&quot;center&quot;&gt;
+&lt;b&gt;We Accept :&lt;/b&gt;
+	&lt;img alt=&quot;Visa&quot; title=&quot;Visa&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-visa.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Mastercard&quot; title=&quot;Mastercard&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-mcard.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;eNETS&quot; title=&quot;eNETS&quot; src=&quot;https://www.busonlineticket.com/booking/images/enets.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Amex&quot; title=&quot;Amex&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-amex.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Diners&quot; title=&quot;Diners&quot; src=&quot;https://www.busonlineticket.com/booking/images/diners.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Discover&quot; title=&quot;Discover&quot; src=&quot;https://www.busonlineticket.com/booking/images/discover.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;PayPal&quot; title=&quot;PayPal&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-paypal.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;DBS Paylah&quot; title=&quot;DBS Paylah&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-dbs_paylah.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;AXS&quot; title=&quot;AXS&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-axs.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Maybank2u&quot; title=&quot;Maybank2u&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-maybank2u.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Cimb&quot; title=&quot;Cimb&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-cimb.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Hong Leong Bank&quot; title=&quot;Hong Leong Bank&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-hlb.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;RHB&quot; title=&quot;RHB&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-rhb.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+
+	&lt;img alt=&quot;TNG EWallet&quot; title=&quot;TNG EWallet&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-tng.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;Boost&quot; title=&quot;Boost&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-boost.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;GrabPay&quot; title=&quot;GrabPay&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-grabpay.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;UnionPay&quot; title=&quot;UnionPay&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-unionpay.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+	&lt;img alt=&quot;AliPay&quot; title=&quot;AliPay&quot; src=&quot;https://www.busonlineticket.com/booking/images/icon-alipay.jpg&quot; class=&quot;enterdetailspayicon&quot; height=&quot;21&quot;&gt;
+&lt;/div&gt;
+	&lt;footer id=&quot;main-footer&quot;&gt;
+		&lt;div class=&quot;container hidden-xs check_footer&quot;&gt;
+			&lt;div class=&quot;row&quot;&gt;
+				&lt;div class=&quot;col-md-2&quot;&gt;
+					&lt;div class=&quot;widget-heading&quot;&gt;Information&lt;/div&gt;
+					&lt;ul class=&quot;widget-list&quot;&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/about-us&quot;&gt;About Us&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/bus-operators&quot;&gt;Bus Operators&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/bus-terminal&quot;&gt;Bus Terminal&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/bus-route&quot;&gt;Bus Route&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/train-route&quot;&gt;Train Route&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/ferry-route&quot;&gt;Ferry Route&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/promotions&quot;&gt;Latest Promotion&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/loyalty-program&quot;&gt;Loyalty Program&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/busonlineticket-affiliates-program&quot;&gt;Affiliate Program&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/booking/agent-registration.aspx&quot;&gt;Agent Registration&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/travel-tips&quot;&gt;Travel Tips&lt;/a&gt;&lt;/li&gt;											
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/destinations&quot;&gt;Destinations&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/contact-us&quot;&gt;Contact Us&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/site-map&quot;&gt;Sitemap&lt;/a&gt;&lt;/li&gt;	
+					&lt;/ul&gt;					
+				&lt;/div&gt;
+				&lt;div class=&quot;col-md-2&quot;&gt;
+					&lt;div class=&quot;widget-heading&quot;&gt;Our Offers&lt;/div&gt;
+					&lt;ul class=&quot;widget-list&quot;&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/booking/bus-tickets.aspx&quot;&gt;Bus Tickets&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/booking/train-tickets.aspx&quot;&gt;Train Tickets&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/booking/ferry-tickets.aspx&quot;&gt;Ferry Tickets&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.klook.com/en-SG/?aid=2941&amp;utm_medium=affiliate-alwayson&amp;utm_source=non-network&amp;utm_campaign=2941&amp;utm_term=&amp;utm_content=&quot;&gt;Tours &amp; Attractions&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/bus-chartering-service&quot;&gt;Bus Charter&lt;/a&gt;&lt;/li&gt;
+					&lt;/ul&gt;
+					&lt;div class=&quot;widget-heading&quot; style=&quot;margin-top:20px;&quot;&gt;Global&lt;/div&gt;
+					&lt;ul class=&quot;widget-list&quot;&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.co.th&quot;&gt;Thailand Booking Site&lt;/a&gt;&lt;/li&gt;
+					&lt;/ul&gt;					
+				&lt;/div&gt;
+				&lt;div class=&quot;col-md-2&quot;&gt;
+					&lt;div class=&quot;widget-heading&quot;&gt;Bookings Guide&lt;/div&gt;
+					&lt;ul class=&quot;widget-list&quot;&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/faq&quot;&gt;Booking FAQ&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/how-to-book&quot;&gt;How to Book&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/trip-duration&quot;&gt;Trip Duration&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/manage-my-booking&quot;&gt;Manage My Booking&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/bot-miles-redemption-guide&quot;&gt;BOT Miles Guide&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/payment-guide&quot;&gt;Payment Guide&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href=&quot;https://www.busonlineticket.com/plus-user-guide&quot;&gt;NTUC Plus! Guide&lt;/a&gt;&lt;/li&gt;				
+					&lt;/ul&gt;				
+				&lt;/div&gt;
+				&lt;div class=&quot;col-md-3&quot;&gt;
+					&lt;ul class=&quot;widget-list2&quot;&gt;
+						&lt;li class=&quot;find&quot;&gt;
+							&lt;div class=&quot;widget-heading&quot;&gt;Find Us&lt;/div&gt;
+							&lt;img alt=&quot;Singapore&quot; title=&quot;Singapore&quot; src=&quot;https://www.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/sg.png&quot;&gt;&amp;nbsp;&lt;strong&gt;Singapore&lt;/strong&gt;&lt;br /&gt;
+							JustCo, 5One Central,&lt;br&gt;
+							51 Bras Basah Rd, #05-01&lt;br&gt;
+							Singapore 189554&lt;br&gt;&lt;br&gt;
+							&lt;img alt=&quot;Malaysia&quot; title=&quot;Malaysia&quot; src=&quot;https://www.busonlineticket.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/ms.png&quot;&gt;&amp;nbsp;&lt;strong&gt;Malaysia&lt;/strong&gt;&lt;br /&gt;
+							&lt;p&gt;VO3-11-19, Designer Office (VO3),&lt;br&gt;
+							Lingkaran SV, Sunway Velocity,&lt;br&gt;
+							55100 Kuala Lumpur&lt;/p&gt;&lt;/li&gt;
+					&lt;/ul&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;col-md-3&quot;&gt;
+					&lt;img src=&quot;https://www.busonlineticket.com/wp-content/themes/BOT/images/logo.png&quot; alt=&quot;&quot; /&gt;
+					&lt;ul class=&quot;social&quot;&gt;
+						&lt;li class=&quot;facebook&quot;&gt;&lt;a title=&quot;Be a fan&quot; href=&quot;https://www.facebook.com/busonlineticket&quot; target=&quot;_blank&quot;&gt;&lt;i style=&quot;padding-top: 6px&quot; class=&quot;fab fa-facebook-f&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+						&lt;li class=&quot;twitter&quot;&gt;&lt;a title=&quot;Follow us!&quot; href=&quot;https://twitter.com/busonlineticket&quot; target=&quot;_blank&quot;&gt;&lt;i style=&quot;padding-top: 6px&quot; class=&quot;fab fa-twitter&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+						&lt;li class=&quot;youtube&quot;&gt;&lt;a title=&quot;Subscribe to us!&quot; href=&quot;https://www.youtube.com/channel/UCIEbr7BpN0afTSjwWcR2ssg&quot; target=&quot;_blank&quot;&gt;&lt;i style=&quot;padding-top: 6px&quot; class=&quot;fab fa-youtube&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+						&lt;li class=&quot;facebook&quot;&gt;&lt;a title=&quot;Follow us!&quot; href=&quot;https://www.instagram.com/busonlineticket/&quot; target=&quot;_blank&quot;&gt;&lt;i style=&quot;padding-top: 6px&quot; class=&quot;fab fa-instagram&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+
+					&lt;/ul&gt;					
+				&lt;/div&gt;
+				&lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;footer_bg&quot;&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;copyright&quot;&gt;
+		&lt;div class=&quot;hidden-lg hidden-md hidden-sm&quot;&gt;
+		&lt;a href=&quot;https://www.busonlineticket.com/booking/check-booking.aspx&quot;&gt;&lt;u&gt;Check My Booking&lt;/u&gt;&lt;/a&gt; | &lt;a href=&quot;https://www.busonlineticket.com/site-map&quot;&gt;&lt;u&gt;Sitemap&lt;/u&gt;&lt;/a&gt; | &lt;a href=&quot;https://www.busonlineticket.co.th&quot;&gt;&lt;u&gt;Thailand Booking Site&lt;/u&gt;&lt;/a&gt;&lt;br&gt;&lt;br&gt;
+			&lt;ul class=&quot;msocial&quot;&gt;
+				&lt;li class=&quot;facebook&quot;&gt;&lt;a title=&quot;Be a fan&quot; href=&quot;https://www.facebook.com/busonlineticket&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fab fa-facebook-f&quot; style=&quot;border: 0px !important;padding-top: 4px;&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+				&lt;li class=&quot;twitter&quot;&gt;&lt;a title=&quot;Follow us!&quot; href=&quot;https://twitter.com/busonlineticket&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fab fa-twitter&quot; style=&quot;border: 0px !important;padding-top: 4px;&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+				&lt;li class=&quot;youtube&quot;&gt;&lt;a title=&quot;Subscribe to us!&quot; href=&quot;https://www.youtube.com/channel/UCIEbr7BpN0afTSjwWcR2ssg&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fab fa-youtube&quot; style=&quot;border: 0px !important;padding-top: 3px;&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+				&lt;li class=&quot;facebook&quot;&gt;&lt;a title=&quot;Follow us!&quot; href=&quot;https://www.instagram.com/busonlineticket/&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fab fa-instagram&quot; style=&quot;border: 0px !important;padding-top: 3px;&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+			&lt;/ul&gt;&lt;br&gt;
+		&lt;/div&gt;
+
+			Copyright © 2016 - 2030 by &lt;a href=&quot;https://www.busonlineticket.com&quot;&gt;BusOnlineTicket.com&lt;/a&gt;&lt;br&gt; &lt;a href=&quot;https://www.busonlineticket.com/privacy-policy&quot;&gt;&lt;u&gt;Privacy Policy&lt;/u&gt;&lt;/a&gt; | All Rights Reserved
+		&lt;/div&gt;
+	&lt;/footer&gt;
+&lt;script type=&quot;speculationrules&quot;&gt;
+{&quot;prefetch&quot;:[{&quot;source&quot;:&quot;document&quot;,&quot;where&quot;:{&quot;and&quot;:[{&quot;href_matches&quot;:&quot;/*&quot;},{&quot;not&quot;:{&quot;href_matches&quot;:[&quot;/wp-*.php&quot;,&quot;/wp-admin/*&quot;,&quot;/wp-content/uploads/*&quot;,&quot;/wp-content/*&quot;,&quot;/wp-content/plugins/*&quot;,&quot;/wp-content/themes/BOT/*&quot;,&quot;/*\\?(.+)&quot;]}},{&quot;not&quot;:{&quot;selector_matches&quot;:&quot;a[rel~=\&quot;nofollow\&quot;]&quot;}},{&quot;not&quot;:{&quot;selector_matches&quot;:&quot;.no-prefetch, .no-prefetch a&quot;}}]},&quot;eagerness&quot;:&quot;conservative&quot;}]}
+&lt;/script&gt;
+    &lt;script src=&quot;https://www.busonlineticket.com/booking/js/jquery-ui-1.10.4.min.js&quot;&gt;&lt;/script&gt;
+    &lt;span id=&quot;top-link-block&quot; class=&quot;hidden&quot;&gt;
+        &lt;a href=&quot;javascript:void(0)&quot; class=&quot;well well-sm&quot; onclick=&quot;jq(&#x27;html,body&#x27;).animate({scrollTop:0},&#x27;slow&#x27;);&quot;&gt;
+            &lt;i class=&quot;fa fa-chevron-up&quot;&gt;&lt;/i&gt;&lt;span class=&quot;hidden-xs&quot;&gt;&lt;/span&gt;
+        &lt;/a&gt;
+    &lt;/span&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+/* &lt;![CDATA[ */
+var google_conversion_id = 954818278;
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]&gt; */
+&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;//www.googleadservices.com/pagead/conversion.js&quot;&gt;
+&lt;/script&gt;
+&lt;noscript&gt;
+&lt;div style=&quot;display:inline;&quot;&gt;
+&lt;img height=&quot;1&quot; width=&quot;1&quot; style=&quot;border-style:none;&quot; alt=&quot;&quot; src=&quot;//googleads.g.doubleclick.net/pagead/viewthroughconversion/954818278/?guid=ON&amp;amp;script=0&quot;/&gt;
+&lt;/div&gt;
+&lt;/noscript&gt;
+    &lt;div id=&quot;divLoading&quot;&gt;
+        &lt;img id=&quot;pleaseWait&quot; src=&quot;https://www.busonlineticket.com/booking/images/loading.gif&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;ui-widget-overlay ui-front&quot; style=&quot;display: none;&quot; id=&quot;divOverlay&quot; runat=&quot;server&quot;&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;	</div>
     
 <p class="section-label">Failure Reason</p>
-<div class="error-box">(&#x27;C:\\Users\\LEE CHUN YIN\\Desktop\\bot_qa\\tests\\api\\test_api_signup.py&#x27;, 185, &quot;Skipped: Signup endpoint returned 404 — &#x27;/index.aspx/UserRegister&#x27; may have changed. Capture the correct path from DevTools → Network and update API_SIGNUP_ENDPOINT.&quot;)</div>
+<div class="error-box">(&#x27;C:\\Users\\LEE CHUN YIN\\source\\repos\\busonlineticket-qa-automation\\tests\\api\\test_api_signup.py&#x27;, 195, &quot;Skipped: Signup endpoint returned 404 — &#x27;/index.aspx/UserRegister&#x27; may have changed. Capture the correct path from DevTools → Network and update API_SIGNUP_ENDPOINT.&quot;)</div>
   </div>
 </div>
+<p class="no-results" id="no-results">No test cases match your search / filter.</p>
 <script>
-document.querySelectorAll('.card-header').forEach(h => {
-    h.addEventListener('click', () => {
-        h.closest('.card').classList.toggle('open');
+(function () {
+  // collapse / expand
+  document.querySelectorAll('.card-header').forEach(h => {
+    h.addEventListener('click', () => h.closest('.card').classList.toggle('open'));
+  });
+
+  // auto-expand failed
+  document.querySelectorAll('.card[data-status="fail"]').forEach(c => c.classList.add('open'));
+
+  // search + filter
+  var searchEl = document.getElementById('search');
+  var filterBtns = document.querySelectorAll('.filter-btn');
+  var noResults  = document.getElementById('no-results');
+
+  function applyFilters() {
+    var query  = searchEl ? searchEl.value.trim().toLowerCase() : '';
+    var active = document.querySelector('.filter-btn.active');
+    var status = active ? active.dataset.filter : 'all';
+
+    var cards = document.querySelectorAll('.card');
+    var visible = 0;
+
+    cards.forEach(function(card) {
+      var name      = (card.dataset.name || '').toLowerCase();
+      var tcid      = (card.dataset.tcid || '').toLowerCase();
+      var cardSt    = card.dataset.status;
+
+      var matchSearch = !query || name.includes(query) || tcid.includes(query);
+      var matchStatus = status === 'all' || cardSt === status;
+
+      if (matchSearch && matchStatus) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
     });
-});
-// Auto-expand failed cards
-document.querySelectorAll('.card').forEach(c => {
-    if (c.dataset.status === 'fail') c.classList.add('open');
-});
+
+    if (noResults) noResults.style.display = (visible === 0) ? 'block' : 'none';
+  }
+
+  if (searchEl) searchEl.addEventListener('input', applyFilters);
+
+  filterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      filterBtns.forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      applyFilters();
+    });
+  });
+})();
 </script>
 </body>
 </html>

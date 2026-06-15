@@ -114,16 +114,48 @@ h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
 }
 
 /* ── Code blocks ── */
-.step-log, .http-block {
+.step-log {
+    background: #0f1117; border-radius: 8px;
+    padding: 12px 14px; font-size: 0.78rem;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    line-height: 1.65; overflow-x: auto;
+    white-space: pre-wrap; word-break: break-word;
+    border: 1px solid #1e293b;
+    max-height: 600px; overflow-y: auto;
+}
+.http-block {
     background: #0f1117; border-radius: 8px;
     padding: 12px 14px; font-size: 0.78rem;
     font-family: 'Cascadia Code', 'Fira Code', monospace;
     line-height: 1.65; overflow-x: auto;
     white-space: pre; word-break: break-word;
     border: 1px solid #1e293b;
+    max-height: 380px; overflow-y: auto;
 }
-.step-log { max-height: 320px; overflow-y: auto; white-space: pre-wrap; }
-.http-block { max-height: 380px; overflow-y: auto; }
+
+/* ── Per-step screenshot ── */
+.step-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 2px; }
+.step-text { flex: 1; white-space: pre-wrap; word-break: break-word; }
+.ss-btn {
+    flex-shrink: 0;
+    background: none; border: 1px solid #334155;
+    border-radius: 4px; color: #64748b;
+    font-size: 0.7rem; padding: 1px 6px;
+    cursor: pointer; line-height: 1.6;
+    transition: all .15s;
+}
+.ss-btn:hover { border-color: #3b82f6; color: #93c5fd; }
+.ss-btn.active { border-color: #3b82f6; color: #93c5fd; background: #1e3a5f22; }
+.step-ss {
+    display: none;
+    margin: 6px 0 10px 28px;
+}
+.step-ss img {
+    max-width: 100%; border-radius: 6px;
+    border: 1px solid #334155; cursor: zoom-in;
+    transition: border-color .15s;
+}
+.step-ss img:hover { border-color: #64748b; }
 
 .step-pass { color: #22c55e; }
 .step-fail { color: #ef4444; }
@@ -216,6 +248,16 @@ _JS = """
     });
   });
 })();
+
+// Per-step screenshot toggle
+function toggleStepSS(btn) {
+  var ssDiv = btn.parentElement.nextElementSibling;
+  if (!ssDiv || !ssDiv.classList.contains('step-ss')) return;
+  var isOpen = ssDiv.style.display === 'block';
+  ssDiv.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('active', !isOpen);
+  btn.textContent = isOpen ? '📷' : '✕';
+}
 """
 
 
@@ -371,19 +413,35 @@ def build_ui_card(
     dur = f"{duration:.2f}s"
     icon = "✔" if passed else "✘"
 
-    step_lines = []
+    step_parts = []
     for s in steps:
-        st = s.get("status", "step")
-        tx = html.escape(s.get("text", ""))
+        st  = s.get("status", "step")
+        tx  = html.escape(s.get("text", ""))
+        b64 = s.get("screenshot")
+
         if st == "pass":
-            step_lines.append(f'<span class="step-pass">  ✔  {tx}</span>')
+            label = f'<span class="step-pass">  ✔  {tx}</span>'
         elif st == "fail":
-            step_lines.append(f'<span class="step-fail">  ✘  {tx}</span>')
+            label = f'<span class="step-fail">  ✘  {tx}</span>'
         elif st == "info":
-            step_lines.append(f'<span class="step-info">  ▷  {tx}</span>')
+            label = f'<span class="step-info">  ▷  {tx}</span>'
         else:
-            step_lines.append(f'<span class="step-dim">     {tx}</span>')
-    step_html = "\n".join(step_lines) or '<span class="step-dim">(no steps recorded)</span>'
+            label = f'<span class="step-dim">     {tx}</span>'
+
+        if b64:
+            row = (
+                f'<div class="step-row">'
+                f'<span class="step-text">{label}</span>'
+                f'<button class="ss-btn" onclick="toggleStepSS(this)" title="Toggle screenshot">📷</button>'
+                f'</div>'
+                f'<div class="step-ss"><img src="data:image/png;base64,{b64}" alt="step screenshot"/></div>'
+            )
+        else:
+            row = f'<div class="step-row"><span class="step-text">{label}</span></div>'
+
+        step_parts.append(row)
+
+    step_html = "\n".join(step_parts) or '<span class="step-dim">(no steps recorded)</span>'
 
     error_html = ""
     if not passed and error_message:
