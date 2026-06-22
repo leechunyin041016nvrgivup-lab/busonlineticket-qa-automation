@@ -35,7 +35,7 @@ from selenium.webdriver.chrome.options  import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options    import Options as EdgeOptions
 
-from config.settings import BROWSER, HEADLESS, PAGE_LOAD_TIMEOUT
+from config.settings import BROWSER, HEADLESS, PAGE_LOAD_TIMEOUT, SCRIPT_TIMEOUT
 
 
 def _get_chromedriver_path() -> str | None:
@@ -67,6 +67,13 @@ def get_driver() -> webdriver.Remote:
 
     if browser == "chrome":
         opts = ChromeOptions()
+
+        # Return control at DOMContentLoaded instead of the full `load` event.
+        # The site pulls in slow third-party resources (ads/trackers/maps); with
+        # the default 'normal' strategy, driver.get() and any navigation click
+        # block until ALL of them finish, which manifests as a "white screen that
+        # keeps loading" and a renderer timeout. 'eager' avoids that wait.
+        opts.page_load_strategy = "eager"
 
         if HEADLESS:
             opts.add_argument("--headless=new")
@@ -120,6 +127,7 @@ def get_driver() -> webdriver.Remote:
 
     elif browser == "firefox":
         opts = FirefoxOptions()
+        opts.page_load_strategy = "eager"
         if HEADLESS:
             opts.add_argument("--headless")
 
@@ -135,6 +143,7 @@ def get_driver() -> webdriver.Remote:
 
     elif browser == "edge":
         opts = EdgeOptions()
+        opts.page_load_strategy = "eager"
         if HEADLESS:
             opts.add_argument("--headless=new")
         opts.add_argument("--start-maximized")
@@ -149,4 +158,5 @@ def get_driver() -> webdriver.Remote:
         )
 
     driver.set_page_load_timeout(PAGE_LOAD_TIMEOUT)
+    driver.set_script_timeout(SCRIPT_TIMEOUT)
     return driver

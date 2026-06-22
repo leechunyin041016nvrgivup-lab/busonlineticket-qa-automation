@@ -16,7 +16,17 @@
     "last_name": "Tester"
   },
   "base_url": {
-    "ui":  "https://www2.busonlineticket.com",
-    "api": "https://www2.busonlineticket.com"
+    "ui":  "https://www.busonlineticket.com",
+    "api": "https://www.busonlineticket.com"
+  },
+  "manifest": {
+    "full_name": "QA Tester",
+    "phone": "0163553613",
+    "email": "qa.tester@example.com",
+    "gender": "Male",
+    "dob": "01/01/1995",
+    "nationality": "Malaysia",
+    "passport_no": "A12345678",
+    "passport_expiry": "01/01/2032"
   }
 }

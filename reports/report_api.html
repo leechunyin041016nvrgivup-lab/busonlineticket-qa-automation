@@ -94,16 +94,48 @@ h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
 }
 
 /* ── Code blocks ── */
-.step-log, .http-block {
+.step-log {
+    background: #0f1117; border-radius: 8px;
+    padding: 12px 14px; font-size: 0.78rem;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    line-height: 1.65; overflow-x: auto;
+    white-space: pre-wrap; word-break: break-word;
+    border: 1px solid #1e293b;
+    max-height: 600px; overflow-y: auto;
+}
+.http-block {
     background: #0f1117; border-radius: 8px;
     padding: 12px 14px; font-size: 0.78rem;
     font-family: 'Cascadia Code', 'Fira Code', monospace;
     line-height: 1.65; overflow-x: auto;
     white-space: pre; word-break: break-word;
     border: 1px solid #1e293b;
+    max-height: 380px; overflow-y: auto;
 }
-.step-log { max-height: 320px; overflow-y: auto; white-space: pre-wrap; }
-.http-block { max-height: 380px; overflow-y: auto; }
+
+/* ── Per-step screenshot ── */
+.step-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 2px; }
+.step-text { flex: 1; white-space: pre-wrap; word-break: break-word; }
+.ss-btn {
+    flex-shrink: 0;
+    background: none; border: 1px solid #334155;
+    border-radius: 4px; color: #64748b;
+    font-size: 0.7rem; padding: 1px 6px;
+    cursor: pointer; line-height: 1.6;
+    transition: all .15s;
+}
+.ss-btn:hover { border-color: #3b82f6; color: #93c5fd; }
+.ss-btn.active { border-color: #3b82f6; color: #93c5fd; background: #1e3a5f22; }
+.step-ss {
+    display: none;
+    margin: 6px 0 10px 28px;
+}
+.step-ss img {
+    max-width: 100%; border-radius: 6px;
+    border: 1px solid #334155; cursor: zoom-in;
+    transition: border-color .15s;
+}
+.step-ss img:hover { border-color: #64748b; }
 
 .step-pass { color: #22c55e; }
 .step-fail { color: #ef4444; }
@@ -141,7 +173,7 @@ h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
 </head>
 <body>
 <h1>API Test Report</h1>
-<p class="subtitle">Generated: 2026-06-15 15:49:13</p>
+<p class="subtitle">Generated: 2026-06-22 08:59:06</p>
 <div class="summary-bar">
   <span class="badge total">Total: 4</span>
   <span class="badge pass">Passed: 1</span>
@@ -161,7 +193,7 @@ h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
       <div class="tc-id">TC-API-01</div>
       <div class="tc-name">✘ test_login_valid_credentials</div>
     </div>
-    <span class="tc-dur">2.22s</span>
+    <span class="tc-dur">2.20s</span>
     <span class="chevron">▶</span>
   </div>
   <div class="card-body">
@@ -205,18 +237,18 @@ h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
     <span class="j-key">&quot;dob&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
     <span class="j-key">&quot;linkntuc&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
     <span class="j-key">&quot;linkapp&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
-    <span class="j-key">&quot;buddies&quot;</span> <span class="j-punct">[</span><span class="j-punct">]</span>
+    <span class="j-key">&quot;buddies&quot;</span> <span class="j-null">null</span>
   <span class="j-punct">}</span><span class="j-punct">,</span>
   <span class="j-key">&quot;response&quot;</span> <span class="j-punct">{</span>
     <span class="j-key">&quot;status&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
-    <span class="j-key">&quot;message&quot;</span> <span class="j-str">&quot;Invalid login credentials.&quot;</span>
+    <span class="j-key">&quot;message&quot;</span> <span class="j-str">&quot;Google Verification Failed&quot;</span>
   <span class="j-punct">}</span>
 <span class="j-punct">}</span></div>
     
 <p class="section-label">Failure Reason</p>
 <div class="error-box">tests\api\test_api_login.py:155: in test_login_valid_credentials
     pytest.fail(f&quot;Login API rejected credentials (status=0): {api_msg}&quot;)
-E   Failed: Login API rejected credentials (status=0): Invalid login credentials.</div>
+E   Failed: Login API rejected credentials (status=0): Google Verification Failed</div>
   </div>
 </div>
 <div class="card" data-status="pass" data-name="test_login_invalid_credentials" data-tcid="tc-api-02">
@@ -270,11 +302,11 @@ E   Failed: Login API rejected credentials (status=0): Invalid login credentials
     <span class="j-key">&quot;dob&quot;</span> <span class="j-null">null</span><span class="j-punct">,</span>
     <span class="j-key">&quot;linkntuc&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
     <span class="j-key">&quot;linkapp&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
-    <span class="j-key">&quot;buddies&quot;</span> <span class="j-punct">[</span><span class="j-punct">]</span>
+    <span class="j-key">&quot;buddies&quot;</span> <span class="j-null">null</span>
   <span class="j-punct">}</span><span class="j-punct">,</span>
   <span class="j-key">&quot;response&quot;</span> <span class="j-punct">{</span>
     <span class="j-key">&quot;status&quot;</span> <span class="j-num">0</span><span class="j-punct">,</span>
-    <span class="j-key">&quot;message&quot;</span> <span class="j-str">&quot;Invalid login credentials.&quot;</span>
+    <span class="j-key">&quot;message&quot;</span> <span class="j-str">&quot;Google Verification Failed&quot;</span>
   <span class="j-punct">}</span>
 <span class="j-punct">}</span></div>
     
@@ -287,7 +319,7 @@ E   Failed: Login API rejected credentials (status=0): Invalid login credentials
       <div class="tc-id">TC-API-03</div>
       <div class="tc-name">✘ test_signup_valid_payload_triggers_otp</div>
     </div>
-    <span class="tc-dur">3.20s</span>
+    <span class="tc-dur">3.15s</span>
     <span class="chevron">▶</span>
   </div>
   <div class="card-body">
@@ -371,7 +403,7 @@ img:is([sizes=auto i],[sizes^=&quot;auto,&quot; i]){contain-intrinsic-size:3000p
 &lt;/style&gt;
 &lt;link rel=&#x27;stylesheet&#x27; id=&#x27;wp-block-library-css&#x27; href=&#x27;https://www2.busonlineticket.com/wp-includes/css/dist/block-library/style.min.css?ver=6.9.4&#x27; type=&#x27;text/css&#x27; media=&#x27;all&#x27; /&gt;
 &lt;style id=&#x27;wp-block-library-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
-/*wp_block_styles_on_demand_placeholder:6a2fae2b3c3a3*/
+/*wp_block_styles_on_demand_placeholder:6a3888a421ef7*/
 /*# sourceURL=wp-block-library-inline-css */
 &lt;/style&gt;
 &lt;style id=&#x27;classic-theme-styles-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
@@ -407,17 +439,17 @@ jQuery(document).ready(function (){
 	}
 });
 &lt;/script&gt;	&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.min.js&quot;&gt;&lt;/script&gt;
-   &lt;script src=&quot;https://cdn.busonlineticket.com/js/all_route.js?v=26262626JunJun1515&quot;&gt;&lt;/script&gt;  		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.busonlineticket.com/fonts/fontawesome/css/all.min.css?ver=6.1.0&quot; /&gt;
-		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/mainv2.css?ver=26260615&quot; /&gt;
-		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/sitev2.css?ver=26260615&quot; /&gt;
-		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/style_min.css?ver=26260615&quot; /&gt;
-		&lt;!--&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/global_style_homepagev2.css?ver=26260615&quot; /&gt;--&gt;
+   &lt;script src=&quot;https://cdn.busonlineticket.com/js/all_route.js?v=26262626JunJun2222&quot;&gt;&lt;/script&gt;  		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.busonlineticket.com/fonts/fontawesome/css/all.min.css?ver=6.1.0&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/mainv2.css?ver=26260622&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/sitev2.css?ver=26260622&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/style_min.css?ver=26260622&quot; /&gt;
+		&lt;!--&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/global_style_homepagev2.css?ver=26260622&quot; /&gt;--&gt;
 		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.busonlineticket.com/css/jquery.smartbanner.css&quot; /&gt;
-		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/slick.min.js?v=26260615&quot;&gt;&lt;/script&gt;
-		&lt;script type=&quot;text/javascript&quot; src=&quot;https://www2.busonlineticket.com/js/custom_main.js?v=26260615&quot;&gt;&lt;/script&gt;	
-		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.dotdotdot.js?v=26260615&quot;&gt;&lt;/script&gt;	
-		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/isotope.pkgd.min.js?v=26260615&quot;&gt;&lt;/script&gt;
-		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.smartbanner.js?ver=26260615&quot;&gt;&lt;/script&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/slick.min.js?v=26260622&quot;&gt;&lt;/script&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://www2.busonlineticket.com/js/custom_main.js?v=26260622&quot;&gt;&lt;/script&gt;	
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.dotdotdot.js?v=26260622&quot;&gt;&lt;/script&gt;	
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/isotope.pkgd.min.js?v=26260622&quot;&gt;&lt;/script&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.smartbanner.js?ver=26260622&quot;&gt;&lt;/script&gt;
 
 &lt;script&gt;
   var jq = jQuery.noConflict();
@@ -714,7 +746,7 @@ var google_remarketing_only = true;
       <div class="tc-id">TC-API-04</div>
       <div class="tc-name">✘ test_signup_duplicate_phone_rejected</div>
     </div>
-    <span class="tc-dur">3.11s</span>
+    <span class="tc-dur">3.25s</span>
     <span class="chevron">▶</span>
   </div>
   <div class="card-body">
@@ -798,7 +830,7 @@ img:is([sizes=auto i],[sizes^=&quot;auto,&quot; i]){contain-intrinsic-size:3000p
 &lt;/style&gt;
 &lt;link rel=&#x27;stylesheet&#x27; id=&#x27;wp-block-library-css&#x27; href=&#x27;https://www2.busonlineticket.com/wp-includes/css/dist/block-library/style.min.css?ver=6.9.4&#x27; type=&#x27;text/css&#x27; media=&#x27;all&#x27; /&gt;
 &lt;style id=&#x27;wp-block-library-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
-/*wp_block_styles_on_demand_placeholder:6a2fae2e591d8*/
+/*wp_block_styles_on_demand_placeholder:6a3888a7609ca*/
 /*# sourceURL=wp-block-library-inline-css */
 &lt;/style&gt;
 &lt;style id=&#x27;classic-theme-styles-inline-css&#x27; type=&#x27;text/css&#x27;&gt;
@@ -834,17 +866,17 @@ jQuery(document).ready(function (){
 	}
 });
 &lt;/script&gt;	&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.min.js&quot;&gt;&lt;/script&gt;
-   &lt;script src=&quot;https://cdn.busonlineticket.com/js/all_route.js?v=26262626JunJun1515&quot;&gt;&lt;/script&gt;  		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.busonlineticket.com/fonts/fontawesome/css/all.min.css?ver=6.1.0&quot; /&gt;
-		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/mainv2.css?ver=26260615&quot; /&gt;
-		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/sitev2.css?ver=26260615&quot; /&gt;
-		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/style_min.css?ver=26260615&quot; /&gt;
-		&lt;!--&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/global_style_homepagev2.css?ver=26260615&quot; /&gt;--&gt;
+   &lt;script src=&quot;https://cdn.busonlineticket.com/js/all_route.js?v=26262626JunJun2222&quot;&gt;&lt;/script&gt;  		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.busonlineticket.com/fonts/fontawesome/css/all.min.css?ver=6.1.0&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/mainv2.css?ver=26260622&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/sitev2.css?ver=26260622&quot; /&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/style_min.css?ver=26260622&quot; /&gt;
+		&lt;!--&lt;link rel=&quot;stylesheet&quot; href=&quot;https://www2.busonlineticket.com/css/global_style_homepagev2.css?ver=26260622&quot; /&gt;--&gt;
 		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.busonlineticket.com/css/jquery.smartbanner.css&quot; /&gt;
-		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/slick.min.js?v=26260615&quot;&gt;&lt;/script&gt;
-		&lt;script type=&quot;text/javascript&quot; src=&quot;https://www2.busonlineticket.com/js/custom_main.js?v=26260615&quot;&gt;&lt;/script&gt;	
-		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.dotdotdot.js?v=26260615&quot;&gt;&lt;/script&gt;	
-		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/isotope.pkgd.min.js?v=26260615&quot;&gt;&lt;/script&gt;
-		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.smartbanner.js?ver=26260615&quot;&gt;&lt;/script&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/slick.min.js?v=26260622&quot;&gt;&lt;/script&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://www2.busonlineticket.com/js/custom_main.js?v=26260622&quot;&gt;&lt;/script&gt;	
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.dotdotdot.js?v=26260622&quot;&gt;&lt;/script&gt;	
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/isotope.pkgd.min.js?v=26260622&quot;&gt;&lt;/script&gt;
+		&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.busonlineticket.com/js/jquery.smartbanner.js?ver=26260622&quot;&gt;&lt;/script&gt;
 
 &lt;script&gt;
   var jq = jQuery.noConflict();
@@ -1187,6 +1219,16 @@ var google_remarketing_only = true;
     });
   });
 })();
+
+// Per-step screenshot toggle
+function toggleStepSS(btn) {
+  var ssDiv = btn.parentElement.nextElementSibling;
+  if (!ssDiv || !ssDiv.classList.contains('step-ss')) return;
+  var isOpen = ssDiv.style.display === 'block';
+  ssDiv.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('active', !isOpen);
+  btn.textContent = isOpen ? '📷' : '✕';
+}
 </script>
 </body>
 </html>

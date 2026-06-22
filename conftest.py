@@ -48,6 +48,9 @@ class _TestContext:
         # Set ctx.driver = driver at the start of each UI test to enable
         # automatic per-step screenshots in the HTML report.
         self.driver                       = None
+        # Booking tests fill this with per-field manifest visibility results:
+        # [{"key","label","shown","expected","verdict"}, ...]
+        self.manifest_fields: list[dict]  = []
 
     def _snap(self) -> str | None:
         """Capture current browser state as a base64 PNG, silently skip if unavailable."""
@@ -172,6 +175,7 @@ def pytest_runtest_makereport(item, call):
             "steps":           ctx.steps if ctx else [],
             "error_message":   error_msg,
             "screenshot_path": ss_path,
+            "manifest_fields": getattr(ctx, "manifest_fields", []) if ctx else [],
         })
 
     # ── API tests ─────────────────────────────────────────────────────────────
@@ -208,7 +212,7 @@ def _tc_id(item) -> str:
 
 def pytest_sessionfinish(session, exitstatus):
     from utils.report_writer import write_ui_report, write_api_report
-    from utils.excel_writer  import append_results
+    from utils.excel_writer  import append_results, append_manifest_results
 
     out = Path(REPORTS_DIR)
 
@@ -226,6 +230,14 @@ def pytest_sessionfinish(session, exitstatus):
             print(f"  📊 Results appended → data/test_data.xlsx")
         except Exception as e:
             print(f"  ⚠  Excel write skipped: {e}")
+
+    # Per-field manifest visibility results (booking tests only).
+    if any(r.get("manifest_fields") for r in _ui_results):
+        try:
+            n = append_manifest_results(_ui_results)
+            print(f"  📊 Manifest field results appended ({n} rows) → data/test_data.xlsx")
+        except Exception as e:
+            print(f"  ⚠  Manifest results write skipped: {e}")
 
 
 def pytest_terminal_summary(terminalreporter, exitstatus, config):

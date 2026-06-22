@@ -189,6 +189,30 @@ h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
     border: 1px solid #334155; cursor: zoom-in;
 }
 .screenshot-wrap img:hover { border-color: #64748b; }
+
+/* ── Manifest field table ── */
+.manifest-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.78rem; margin-top: 6px;
+    background: #0f1117; border-radius: 8px; overflow: hidden;
+    border: 1px solid #1e293b;
+}
+.manifest-table th, .manifest-table td {
+    text-align: left; padding: 7px 12px;
+    border-bottom: 1px solid #1e293b;
+}
+.manifest-table th {
+    color: #64748b; font-weight: 700;
+    text-transform: uppercase; font-size: 0.66rem; letter-spacing: .5px;
+    background: #161b26;
+}
+.manifest-table tr:last-child td { border-bottom: none; }
+.manifest-table code { color: #7dd3fc; font-size: 0.72rem; }
+.m-shown  { color: #22c55e; font-weight: 600; }
+.m-hidden { color: #475569; }
+.m-pass   { color: #22c55e; font-weight: 700; }
+.m-fail   { color: #ef4444; font-weight: 700; }
+.m-dash   { color: #475569; }
 """
 
 
@@ -408,6 +432,7 @@ def build_ui_card(
     steps: list[dict],
     error_message: str | None,
     screenshot_path: str | None,
+    manifest_fields: list[dict] | None = None,
 ) -> str:
     sc  = _status_class(passed)
     dur = f"{duration:.2f}s"
@@ -443,6 +468,42 @@ def build_ui_card(
 
     step_html = "\n".join(step_parts) or '<span class="step-dim">(no steps recorded)</span>'
 
+    # ── Manifest field visibility table (booking tests) ─────────────────────
+    manifest_html = ""
+    if manifest_fields:
+        shown_count = sum(1 for f in manifest_fields if f.get("shown"))
+        rows = []
+        for f in manifest_fields:
+            if f.get("shown"):
+                shown_cell = '<span class="m-shown">✔ Shown</span>'
+            else:
+                shown_cell = '<span class="m-hidden">— Hidden</span>'
+
+            verdict = f.get("verdict", "—")
+            if verdict == "PASS":
+                v_cell = '<span class="m-pass">PASS</span>'
+            elif verdict == "FAIL":
+                v_cell = '<span class="m-fail">FAIL</span>'
+            else:
+                v_cell = '<span class="m-dash">—</span>'
+
+            rows.append(
+                "<tr>"
+                f"<td>{html.escape(str(f.get('label', '')))}</td>"
+                f"<td><code>{html.escape(str(f.get('key', '')))}</code></td>"
+                f"<td>{shown_cell}</td>"
+                f"<td>{html.escape(str(f.get('expected', '—')))}</td>"
+                f"<td>{v_cell}</td>"
+                "</tr>"
+            )
+        manifest_html = (
+            f'<p class="section-label">Manifest Fields — {shown_count} of '
+            f'{len(manifest_fields)} shown to user</p>'
+            '<table class="manifest-table"><thead><tr>'
+            '<th>Field</th><th>Key</th><th>Shown?</th><th>Expected</th><th>Verdict</th>'
+            '</tr></thead><tbody>' + "".join(rows) + '</tbody></table>'
+        )
+
     error_html = ""
     if not passed and error_message:
         error_html = f"""
@@ -472,6 +533,7 @@ def build_ui_card(
   <div class="card-body">
     <p class="section-label">Step Log</p>
     <div class="step-log">{step_html}</div>
+    {manifest_html}
     {error_html}
     {ss_html}
   </div>

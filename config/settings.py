@@ -44,7 +44,11 @@ SLEEP_MULTIPLIER: float = 0.4 if _UI_MODE == "fast" else 1.0
 # ── Timeouts (seconds) ────────────────────────────────────────────────────────
 IMPLICIT_WAIT    = 10
 EXPLICIT_WAIT    = 15
-PAGE_LOAD_TIMEOUT = 30
+# The live site loads slow third-party resources (ads/trackers/maps) that can
+# delay the full `load` event well past 30 s — the driver uses page_load_strategy
+# 'eager' (returns at DOMContentLoaded) so this is a safety ceiling, not the norm.
+PAGE_LOAD_TIMEOUT = 60
+SCRIPT_TIMEOUT    = 60
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 ROOT_DIR    = pathlib.Path(__file__).parent.parent
